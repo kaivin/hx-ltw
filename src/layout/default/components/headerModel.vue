@@ -1,12 +1,19 @@
 <template>
   <div class="header">
-      <div class="logo">红星长尾词管理系统(组合三)</div>
+      <div class="logo" v-on:click="goDefault">红星长尾词管理系统(组合三)</div>
   </div>
 </template>
 
 <script>
 export default {
-    name:"headerModel"
+    name:"headerModel",
+    methods:{
+        goDefault:function(){
+            var $this = this;
+            var router = $this.$router;
+            router.push({path: '/'});
+        }
+    }
 }
 </script>
 
@@ -25,6 +32,7 @@ export default {
             font-size: 16px;
             color: #fff;
             padding:0 20px;
+            cursor: pointer;
         }
     }
 </style>

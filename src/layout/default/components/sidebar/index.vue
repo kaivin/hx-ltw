@@ -3,7 +3,7 @@
         <div class="sidebar-content">
             <ul class="menu-panel">
                 <li class="item-menu" v-for="(item,index) in navList" v-bind:class="item.isActive?'is-active':''" v-bind:key="index">
-                    <div class="item-menu-font"><i class="icon" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
+                    <div class="item-menu-font" v-on:click="goPage(item.linkUrl,item.pageType)"><i class="icon" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
                 </li>
             </ul>
         </div>
@@ -64,6 +64,18 @@ export default {
   computed:{
   },
   methods:{
+    goPage:function(value,type){
+      var $this = this;
+      var router = $this.$router;
+      router.push({path: value});
+      $this.navList.forEach(function(item,index){
+        if(type == item.pageType){
+          item.isActive = true;
+        }else{
+          item.isActive = false;
+        }
+      });
+    }
   }
 }
 </script>

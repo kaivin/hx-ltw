@@ -24,6 +24,13 @@ export default {
     Sidebar,
     HeaderModel
   },
+  mounted() {
+      window.addEventListener('load', () => { // 滚动事件变为 scroll
+          if (this.$route.path !== '/default') { // /print 表示首页
+                this.$router.replace('/default') // 切换到首页
+          }
+      });
+  },
   computed:{
   },
   methods: {

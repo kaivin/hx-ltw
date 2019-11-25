@@ -18,73 +18,31 @@ const routes = [
                 component: () => import('@/views/default'),
                 name: 'defaultPage',
             },
-        ]
-    },
-    {
-        path: '/indexPage',
-        redirect: 'indexPage',
-        component: Layout,
-        children: [
             {
                 path: 'indexPage',
                 component: () => import('@/views/index'),
                 name: 'indexPage',
             },
-        ]
-    },
-    {
-        path: '/aboutPage',
-        redirect: 'aboutPage',
-        component: Layout,
-        children: [
             {
                 path: 'aboutPage',
                 component: () => import('@/views/about'),
                 name: 'aboutPage',
             },
-        ]
-    },
-    {
-        path: '/listPage',
-        redirect: 'listPage',
-        component: Layout,
-        children: [
             {
                 path: 'listPage',
                 component: () => import('@/views/list'),
                 name: 'listPage',
             },
-        ]
-    },
-    {
-        path: '/articlePage',
-        redirect: 'articlePage',
-        component: Layout,
-        children: [
             {
                 path: 'articlePage',
                 component: () => import('@/views/article'),
                 name: 'articlePage',
             },
-        ]
-    },
-    {
-        path: '/contactPage',
-        redirect: 'contactPage',
-        component: Layout,
-        children: [
             {
                 path: 'contactPage',
                 component: () => import('@/views/contact'),
                 name: 'contactPage',
             },
-        ]
-    },
-    {
-        path: '/longTailWordsPage',
-        redirect: 'longTailWordsPage',
-        component: Layout,
-        children: [
             {
                 path: 'longTailWordsPage',
                 component: () => import('@/views/longTailWords'),
