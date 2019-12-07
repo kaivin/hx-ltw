@@ -1,9 +1,10 @@
 <template>
-    <div class="sidebar">
+    <div class="sidebar" v-bind:class="isOpened?'show':'hide'">
+        <span class="sidebar-menu iconfont" v-bind:class="isOpened?'icon-left':'icon-right'" v-on:click="toggleSidebar"></span>
         <div class="sidebar-content">
             <ul class="menu-panel">
                 <li class="item-menu" v-for="(item,index) in navList" v-bind:class="item.isActive?'is-active':''" v-bind:key="index">
-                    <div class="item-menu-font" v-on:click="goPage(item.linkUrl,item.pageType)"><i class="icon" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
+                    <div class="item-menu-font" v-on:click="goPage(item.linkUrl,item.pageType)"><i class="iconfont" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
                 </li>
             </ul>
         </div>
@@ -11,68 +12,87 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'Sidebar',
   data:function(){
     return{
       navList:[
         {
-            pageType:'index',
-            name:'首页',
-            icon:'el-icon-s-tools',
+            pageType:'module',
+            name:'模块',
+            icon:'icon-module',
             isActive:false,
-            linkUrl:'/indexPage'
+            linkUrl:'/modulePage'
         },
         {
-            pageType:'about',
-            name:'关于我们',
-            icon:'el-icon-document',
+            pageType:'website',
+            name:'站点',
+            icon:'icon-site',
             isActive:false,
-            linkUrl:'/aboutPage'
-        },
-        {
-            pageType:'list',
-            name:'列表页',
-            icon:'el-icon-picture',
-            isActive:false,
-            linkUrl:'/listPage'
-        },
-        {
-            pageType:'article',
-            name:'详情页',
-            icon:'el-icon-open',
-            isActive:false,
-            linkUrl:'/articlePage'
-        },
-        {
-            pageType:'contact',
-            name:'联系我们',
-            icon:'el-icon-open',
-            isActive:false,
-            linkUrl:'/contactPage'
-        },
-        {
-            pageType:'ltw',
-            name:'长尾词页',
-            icon:'el-icon-open',
-            isActive:false,
-            linkUrl:'/longTailWordsPage'
+            linkUrl:'/websitePage'
         },
       ]
     }
   },
+  watch:{
+    // 监听状态管理中导航的cookie值变化，如果导航是在默认首页，则执行里面的事件
+    isDefaultActive:function(val,oldVal){
+      var $this = this;
+      if(val){
+        $this.navList.forEach(function(item,index){
+          item.isActive = false;
+        });
+      }
+    }
+  },
+  mounted() {
+    window.addEventListener('load', () => { // 滚动事件变为 scroll
+      var $this = this;
+      if($this.pageType!=="default"&&!$this.isDefaultActive){
+        $this.navList.forEach(function(item,index){
+          if(item.pageType == $this.pageType){
+            item.isActive = true;
+          }
+        });
+      }
+    });
+  },
   computed:{
+    ...mapGetters([
+        'sidebar',
+    ]),
+    isDefaultActive:function(){
+      return this.sidebar.isDefaultActive;
+    },
+    isOpened(){
+      return this.sidebar.opened;
+    },
+    pageType(){
+      return this.sidebar.pageType;
+    }
   },
   methods:{
+    toggleSidebar() {
+        this.$store.dispatch('header/toggleSideBar');
+    },
     goPage:function(value,type){
       var $this = this;
       var router = $this.$router;
-      router.push({path: value});
+      $this.$store.dispatch('header/changeActive','');
+      $this.$store.dispatch('header/changePageType',type);
       $this.navList.forEach(function(item,index){
-        if(type == item.pageType){
-          item.isActive = true;
+        if(!item.isActive){
+          if(item.pageType == type){
+            router.push({path: value});
+            item.isActive = true;
+          }else{
+            item.isActive = false;
+          }
         }else{
-          item.isActive = false;
+          if(item.pageType != type){
+            item.isActive = false;
+          }
         }
       });
     }
@@ -81,6 +101,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sidebar.show{
+  left:0;
+}
+.sidebar.hide{
+  left: -240px;
+}
 .sidebar{
     background: #252a2f;
     width: 240px;
@@ -88,8 +114,28 @@ export default {
     left:0;
     top: 64px;
     bottom:0;
-    overflow: hidden;
+    @extend %clearfix;
+    transition: left .5s linear;
     z-index: 1080;
+    .sidebar-menu{
+      width: 48px;
+      height: 48px;
+      border-radius: 0 5px 5px 0;
+      background: #fff;
+      border: 1px solid #e6e6e6;
+      border-left:0;
+      position: absolute;
+      right: -48px;
+      top: 68px;
+      cursor: pointer;
+      line-height: 48px;
+      text-align: center;
+      font-size: 36px;
+      color: red;
+      &:hover{
+        background:fff;
+      }
+    }
     .sidebar-content{
         height:100%;
         overflow-y: auto;
@@ -125,7 +171,7 @@ export default {
                     &:hover{
                         background: darken(#252a2f,2%);
                     }
-                    .icon,.item-link{
+                    .iconfont,.item-link{
                         display: inline-block;
                         vertical-align: middle;
                         height: 56px;
@@ -133,9 +179,9 @@ export default {
                         font-size: 14px;
                         color: #fff;
                     }
-                    .icon{
+                    .iconfont{
                         color: #909399;
-                        font-size: 16px;
+                        font-size: 20px;
                         margin-right: 10px;
                     }
                 }

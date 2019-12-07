@@ -1,0 +1,1513 @@
+<template>
+  <div class="page-root">
+      <div class="search-page">
+        <div class="item-search">
+          <h2>公共样式</h2>
+          <div class="item-body">
+            <el-checkbox v-model="searchData.publicCssData.isSelected" v-bind:label="searchData.publicCssData.name" v-bind:disabled="searchData.publicCssData.isDisabled" border></el-checkbox>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>有效宽度</h2>
+          <div class="item-body">
+            <el-checkbox v-for="(item,index) in searchData.maxWidthData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeMaxWidthState(item)" v-bind:disabled="item.isDisabled" border></el-checkbox>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>全局随机数据</h2>
+          <div class="item-body">
+            <el-radio v-for="(item,index) in searchData.randomData" v-bind:key="index" v-model="searchData.isRandom" v-bind:label="item.type" border>{{item.name}}</el-radio>
+            <div class="inline-body" v-if="searchData.isRandom=='1'">
+              <div class="inline-font left-font">各模块分别随机选择</div>
+              <div class="inline-content num-input"><el-input v-model="searchData.randomQty" placeholder=""></el-input></div>
+              <div class="inline-font">条数据</div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>公共模块</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.publicModuleData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changePublicModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.publicModuleData.moduleData[0].isSelected">
+            <h2>页头侧边固定</h2>
+            <div class="item-body">
+              <el-radio v-for="(item,index) in searchData.headerFixedData" v-bind:key="index" v-model="searchData.headerFixed" v-bind:label="item.type" v-on:change="changeHeaderFixedState(item)" border>{{item.name}}</el-radio>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>首页</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.indexData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeIndexModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.indexData.moduleData[0].isSelected">
+            <h4>关于我们包含模块</h4>
+            <div class="item-body">
+              <el-checkbox v-for="(item,index) in searchData.indexData.moduleData[0].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeIndexAboutState(item)" border></el-checkbox>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.indexData.moduleData[1].isSelected">
+            <h4>热销产品包含模块</h4>
+            <div class="item-body">
+              <el-checkbox v-for="(item,index) in searchData.indexData.moduleData[1].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeIndexProductState(item)" border></el-checkbox>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.indexData.moduleData[2].isSelected">
+            <h4>经典案例包含模块</h4>
+            <div class="item-body">
+              <el-checkbox v-for="(item,index) in searchData.indexData.moduleData[2].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeIndexCaseState(item)" border></el-checkbox>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>关于我们</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.aboutData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeAboutModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>产品列表</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.productListData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeProductListModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>产品详情</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.productDetailData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeProductDetailModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>案例列表</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.caseListData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeCaseListModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>案例详情</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.caseDetailData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeCaseDetailModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search">
+          <h2>联系我们</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.contactData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeContactModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item-search" style="min-height: 280px;">
+          <h2>长尾词列表</h2>
+          <div class="item-body">
+            <div class="inline-body" v-for="(item,index) in searchData.longTailWordData.moduleData" v-bind:key="index">
+              <el-checkbox v-model="item.isSelected" v-bind:label="item.name" v-bind:disabled="item.isDisabled" v-on:change="changeLongTailWordModuleState(item)" border></el-checkbox>
+              <div class="inline-content" v-if="item.isSelected&&searchData.isRandom=='0'"><span class="iconfont icon-search" v-on:click="showDialog(item)"></span></div>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.longTailWordData.moduleData[0].isSelected">
+            <h4>热销产品包含模块</h4>
+            <div class="item-body">
+              <el-checkbox v-for="(item,index) in searchData.longTailWordData.moduleData[0].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeHotProductState(item)" border></el-checkbox>
+            </div>
+          </div>
+          <div class="sub-search" v-if="searchData.longTailWordData.moduleData[2].isSelected">
+            <h4>长尾词列表包含模块</h4>
+            <div class="item-body">
+              <el-checkbox v-for="(item,index) in searchData.longTailWordData.moduleData[2].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeProductListState(item)" border></el-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="abs-dialog" v-bind:class="[searchDialog.isSearchDialog?'show':'hide']">
+        <div class="dialog-panel">
+          <div class="dialog-header"><h2>{{searchDialog.searchDialogTitle}}</h2><span class="iconfont icon-close" v-on:click="closeDialog"></span></div>
+          <div class="dialog-body">
+            <module-header-search v-if="searchDialog.dialogType=='moduleHeader'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-header-search>
+            <module-footer-search v-if="searchDialog.dialogType=='moduleFooter'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-footer-search>
+            <module-banner-search v-if="searchDialog.dialogType=='moduleBanner'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-banner-search>
+            <module-combo-header-search v-if="searchDialog.dialogType=='moduleComboHeader'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-combo-header-search>
+            <module-public-message-search v-if="searchDialog.dialogType=='moduleMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-public-message-search>
+            <module-decoration-search v-if="searchDialog.dialogType=='moduleDecoration'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-decoration-search>
+            <module-index-about v-if="searchDialog.dialogType=='indexAbout'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-index-about>
+            <module-index-product v-if="searchDialog.dialogType=='indexProduct'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-index-product>
+            <module-index-case v-if="searchDialog.dialogType=='indexCase'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-index-case>
+            <module-index-news v-if="searchDialog.dialogType=='indexNews'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-index-news>
+            <module-index-combo-news v-if="searchDialog.dialogType=='indexComboNews'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-index-combo-news>
+            <module-profile-search v-if="searchDialog.dialogType=='moduleProfile'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-profile-search>
+            <module-culture-search v-if="searchDialog.dialogType=='moduleCulture'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-culture-search>
+            <moduleServiceSearch v-if="searchDialog.dialogType=='moduleService'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></moduleServiceSearch>
+            <module-power-search v-if="searchDialog.dialogType=='modulePower'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-power-search>
+            <module-partner-search v-if="searchDialog.dialogType=='modulePartner'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-partner-search>
+            <product-cate-list v-if="searchDialog.dialogType=='productCateList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-cate-list>
+            <product-img-list v-if="searchDialog.dialogType=='productImgList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-img-list>
+            <product-combo-list v-if="searchDialog.dialogType=='productComboList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-combo-list>
+            <case-cate-list v-if="searchDialog.dialogType=='caseCateList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-cate-list>
+            <case-img-list v-if="searchDialog.dialogType=='caseImgList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-img-list>
+            <case-combo-list v-if="searchDialog.dialogType=='caseComboList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-combo-list>
+            <product-img-article v-if="searchDialog.dialogType=='productImgArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-img-article>
+            <product-main-article v-if="searchDialog.dialogType=='productMainArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-main-article>
+            <product-message v-if="searchDialog.dialogType=='productMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-message>
+            <product-combo-article v-if="searchDialog.dialogType=='productComboArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></product-combo-article>
+            <case-img-article v-if="searchDialog.dialogType=='caseImgArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-img-article>
+            <case-main-article v-if="searchDialog.dialogType=='caseMainArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-main-article>
+            <case-message v-if="searchDialog.dialogType=='caseMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-message>
+            <case-combo-article v-if="searchDialog.dialogType=='caseComboArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></case-combo-article>
+            <module-contact v-if="searchDialog.dialogType=='moduleContact'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-contact>
+            <contact-message v-if="searchDialog.dialogType=='contactMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></contact-message>
+            <module-ltw-product v-if="searchDialog.dialogType=='longTailWordProduct'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-product>
+            <module-ltw-message v-if="searchDialog.dialogType=='longTailWordMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-message>
+            <module-ltw-list v-if="searchDialog.dialogType=='longTailWordList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-list>
+            <module-ltw-combo v-if="searchDialog.dialogType=='moduleComboLongTailWord'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-combo>
+            <module-ltw-combo-news v-if="searchDialog.dialogType=='longTailWordComboNews'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-combo-news>
+          </div>
+          <div class="dialog-footer">
+            <el-button type="primary" v-on:click="closeDialog">确定</el-button>
+          </div>
+        </div>
+      </div>
+  </div>
+</template>
+
+<script>
+import moduleHeaderSearch from '@/components/moduleHeaderSearch/index.vue';
+import moduleFooterSearch from '@/components/moduleFooterSearch/index.vue';
+import moduleBannerSearch from '@/components/moduleBannerSearch/index.vue';
+import moduleComboHeaderSearch from '@/components/moduleComboHeaderSearch/index.vue';
+import modulePublicMessageSearch from '@/components/modulePublicMessageSearch/index.vue';
+import moduleDecorationSearch from '@/components/moduleDecorationSearch/index.vue';
+import moduleIndexAbout from '@/components/moduleIndexAbout/index.vue';
+import moduleIndexProduct from '@/components/moduleIndexProduct/index.vue';
+import moduleIndexCase from '@/components/moduleIndexCase/index.vue';
+import moduleIndexNews from '@/components/moduleIndexNews/index.vue';
+import moduleIndexComboNews from '@/components/moduleIndexComboNews/index.vue';
+import moduleProfileSearch from '@/components/moduleProfileSearch/index.vue';
+import moduleCultureSearch from '@/components/moduleCultureSearch/index.vue';
+import moduleServiceSearch from '@/components/moduleServiceSearch/index.vue';
+import modulePowerSearch from '@/components/modulePowerSearch/index.vue';
+import modulePartnerSearch from '@/components/modulePartnerSearch/index.vue';
+import productCateList from '@/components/productCateList/index.vue';
+import productImgList from '@/components/productImgList/index.vue';
+import productComboList from '@/components/productComboList/index.vue';
+import caseCateList from '@/components/caseCateList/index.vue';
+import caseImgList from '@/components/caseImgList/index.vue';
+import caseComboList from '@/components/caseComboList/index.vue';
+import productImgArticle from '@/components/productImgArticle/index.vue';
+import productMainArticle from '@/components/productMainArticle/index.vue';
+import productMessage from '@/components/productMessage/index.vue';
+import productComboArticle from '@/components/productComboArticle/index.vue';
+import caseImgArticle from '@/components/caseImgArticle/index.vue';
+import caseMainArticle from '@/components/caseMainArticle/index.vue';
+import caseMessage from '@/components/caseMessage/index.vue';
+import caseComboArticle from '@/components/caseComboArticle/index.vue';
+import moduleContact from '@/components/moduleContact/index.vue';
+import contactMessage from '@/components/contactMessage/index.vue';
+import moduleLtwProduct from '@/components/moduleLtwProduct/index.vue';
+import moduleLtwMessage from '@/components/moduleLtwMessage/index.vue';
+import moduleLtwList from '@/components/moduleLtwList/index.vue';
+import moduleLtwCombo from '@/components/moduleLtwCombo/index.vue';
+import moduleLtwComboNews from '@/components/moduleLtwComboNews/index.vue';
+export default {
+    name: 'websitePage',
+    components:{
+      "module-header-search":moduleHeaderSearch,
+      "module-footer-search":moduleFooterSearch,
+      "module-banner-search":moduleBannerSearch,
+      "module-combo-header-search":moduleComboHeaderSearch,
+      "module-public-message-search":modulePublicMessageSearch,
+      "module-decoration-search":moduleDecorationSearch,
+      "module-index-about":moduleIndexAbout,
+      "module-index-product":moduleIndexProduct,
+      "module-index-case":moduleIndexCase,
+      "module-index-news":moduleIndexNews,
+      "module-index-combo-news":moduleIndexComboNews,
+      "module-profile-search":moduleProfileSearch,
+      "module-culture-search":moduleCultureSearch,
+      "module-service-search":moduleServiceSearch,
+      "module-power-search":modulePowerSearch,
+      "module-partner-search":modulePartnerSearch,
+      "product-cate-list":productCateList,
+      "product-img-list":productImgList,
+      "product-combo-list":productComboList,
+      "case-cate-list":caseCateList,
+      "case-img-list":caseImgList,
+      "case-combo-list":caseComboList,
+      "product-img-article":productImgArticle,
+      "product-marin-article":productMainArticle,
+      "product-message":productMessage,
+      "product-combo-article":productComboArticle,
+      "case-img-article":caseImgArticle,
+      "case-marin-article":caseMainArticle,
+      "case-message":caseMessage,
+      "case-combo-article":caseComboArticle,
+      "module-contact":moduleContact,
+      "contact-message":contactMessage,
+      "module-ltw-product":moduleLtwProduct,
+      "module-ltw-message":moduleLtwMessage,
+      "module-ltw-list":moduleLtwList,
+      "module-ltw-combo":moduleLtwCombo,
+      "module-ltw-combo-news":moduleLtwComboNews,
+    },
+    data: function(){
+      return {
+        searchDialog:{
+          isSearchDialog:false,
+          searchDialogTitle:'',
+          dialogType:'',
+        },
+        searchData:{
+          publicCssData:{isSelected:true,isDisabled:true,name:'公共样式',publicCssCode:''},
+          maxWidthData:[
+              {type:"100%",name:"通屏",isSelected:false,isDisabled:false},
+              {type:"1440",name:"1440",isSelected:false,isDisabled:false},
+              {type:"1280",name:"1280",isSelected:false,isDisabled:false},
+              {type:"960",name:"960",isSelected:false,isDisabled:false},
+          ],
+          publicModuleData:{
+            moduleData:[
+              {type:'moduleHeader',name:'页头',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleBanner',name:'banner',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleComboHeader',name:'组合页头',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleMessage',name:'留言板',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleDecoration',name:'装饰模块',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleFooter',name:'页脚',isSelected:true,isDisabled:true,
+                selectedModuleType:['moduleFooter'],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          isRandom:"1",
+          randomData:[
+              {type:'1',name:"是"},
+              {type:'0',name:"否"},
+          ],
+          randomQty:"3",
+          headerFixed:"",
+          headerFixedData:[
+              {type:'1',name:"是"},
+              {type:'0',name:"否"},
+          ],
+          fixedIframeData:{
+            iframeHtmlCode1:"",
+            iframeHtmlCode2:"",
+            iframeHtmlCode3:"",
+            iframeCssCode:"",
+          },
+          indexData:{
+            moduleData:[
+              {type:'indexAbout',name:'关于我们',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[
+                  {type:'moduleProfile',name:'公司简介',isSelected:false,isDisabled:false},
+                  {type:'moduleCulture',name:'公司文化',isSelected:false,isDisabled:false},
+                  {type:'moduleService',name:'公司服务',isSelected:false,isDisabled:false},
+                  {type:'modulePower',name:'公司实力',isSelected:false,isDisabled:false},
+                ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'indexProduct',name:'热销产品',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[
+                  {type:'moduleImgList',name:'图文列表',isSelected:false,isDisabled:false},
+                  {type:'moduleComboList',name:'组合列表',isSelected:false,isDisabled:false},
+                ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'indexCase',name:'经典案例',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[
+                  {type:'moduleImgList',name:'图文列表',isSelected:false,isDisabled:false},
+                  {type:'moduleComboList',name:'组合列表',isSelected:false,isDisabled:false},
+                ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'indexNews',name:'热点新闻',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'indexComboNews',name:'组合新闻',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          aboutData:{
+            moduleData:[
+              {type:'moduleProfile',name:'公司简介',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleCulture',name:'公司文化',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleService',name:'公司服务',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'modulePower',name:'公司实力',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'modulePartner',name:'国际合作',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          productListData:{
+            moduleData:[
+              {type:'productCateList',name:'分类列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'productImgList',name:'图文列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'productComboList',name:'组合列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          productDetailData:{
+            moduleData:[
+              {type:'productImgArticle',name:'图文详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'productMainArticle',name:'正文详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'productMessage',name:'留言板',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'productComboArticle',name:'组合详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          caseListData:{
+            moduleData:[
+              {type:'caseCateList',name:'分类列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'caseImgList',name:'图文列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'caseComboList',name:'组合列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          caseDetailData:{
+            moduleData:[
+              {type:'caseImgArticle',name:'图文详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'caseMainArticle',name:'正文详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'caseMessage',name:'留言板',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'caseComboArticle',name:'组合详情',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          contactData:{
+            moduleData:[
+              {type:'moduleContact',name:'联系方式',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'contactMessage',name:'留言板',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+          longTailWordData:{
+            moduleData:[
+              {type:'longTailWordProduct',name:'热销产品',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[
+                  {type:'moduleImgList',name:'图文列表',isSelected:false,isDisabled:false},
+                  {type:'moduleComboList',name:'组合列表',isSelected:false,isDisabled:false},
+                ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'longTailWordMessage',name:'留言板',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'longTailWordList',name:'长尾词列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[
+                  {type:'moduleImgList',name:'图文列表',isSelected:false,isDisabled:false},
+                  {type:'moduleFontList',name:'文字列表',isSelected:false,isDisabled:false},
+                  {type:'moduleComboList',name:'组合列表',isSelected:false,isDisabled:false},
+                ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'moduleComboLongTailWord',name:'组合长尾词',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'longTailWordComboNews',name:'组合新闻',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
+                sonData:[],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+            ]
+          },
+        }
+      }
+    },
+    methods:{
+      // 有效宽度点击切换触发事件
+      changeMaxWidthState:function(items){
+        var $this = this;
+        if(items.type=="1440"&&$this.searchData.headerFixed=="1"){
+            $this.$alert('1440有效宽度不适用于侧边导航固定框架', '警告', {
+                confirmButtonText: '确定',
+            });
+            $this.searchData.maxWidthData[1].isSelected = false;
+            return false;
+        }
+        $this.searchData.maxWidthData.forEach(function(item,index){
+          if(items.type!=="100%"&&item.type!==items.type&&item.type!='100%'){
+            item.isSelected=false;
+          }
+        });
+      },
+      // 获取有效宽度已选个数
+      getMaxWidthLength:function(){
+        var $this = this;
+        var len = 0;
+        $this.searchData.maxWidthData.forEach(function(item,index){
+          if(item.isSelected){
+            len = len + 1;
+          }
+        });
+        return len;
+      },
+      // 页头侧边固定点击切换触发事件
+      changeHeaderFixedState:function(items){
+        var $this = this;
+        var len = $this.getMaxWidthLength();
+        if(items.type=='1'){
+          if(len<=0){
+            $this.$alert('请先选择有效宽度', '警告', {
+                confirmButtonText: '确定',
+            });
+            $this.searchData.headerFixed = "";
+            return false;
+          }else{
+            if($this.searchData.maxWidthData[1].isSelected){
+              $this.$alert('1440有效宽度不适用于侧边导航固定框架', '警告', {
+                  confirmButtonText: '确定',
+              });
+              $this.searchData.headerFixed = "";
+              return false;
+            }
+          }
+        }
+      },
+      // 公共模块点击切换触发事件
+      changePublicModuleState:function(items){
+        var $this = this;
+        $this.searchData.publicModuleData.moduleData.forEach(function(item,index){
+          if((items.type=="moduleHeader"||items.type=="moduleBanner")&&items.isSelected){
+            if(item.type == "moduleComboHeader"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == "moduleComboHeader"&&items.isSelected){
+            if((item.type=="moduleHeader"||item.type=="moduleBanner")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == item.type&&item.isSelected){
+            item.selectedModuleType.push(item.type);
+          }else{
+            item.selectedModuleType = [];
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 显示弹窗点击事件
+      showDialog:function(items){
+        var $this = this;
+        $this.searchDialog.isSearchDialog = true;
+        $this.searchDialog.searchDialogTitle = "编辑"+items.name+"筛选条件";
+        $this.searchDialog.dialogType = items.type;
+      },
+      // 关闭筛选条件弹窗
+      closeDialog:function(){
+        var $this = this;
+        $this.searchDialog.isSearchDialog = false;
+      },
+      // 监听并获取模块子组件数据改变
+      getModuleChanged:function(obj){
+        var $this = this;
+        $this.searchData = obj;
+      },
+      // 首页模块选中状态改变事件
+      changeIndexModuleState:function(items){
+        var $this = this;
+        $this.searchData.indexData.moduleData.forEach(function(item,index){
+          if(items.type=="indexNews"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleFontList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type=="indexComboNews"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboNews");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "indexAbout"){
+            if(items.type==item.type&&!item.isSelected){
+              $this.searchData.indexData.moduleData[0].selectedModuleType = [];
+              $this.searchData.indexData.moduleData[0].sonData.forEach(function(item1,index1){
+                item1.isSelected = false;
+              });
+            }
+          }
+          if(items.type == "indexProduct"){
+            if(items.type==item.type&&!item.isSelected){
+              $this.searchData.indexData.moduleData[1].selectedModuleType = [];
+              $this.searchData.indexData.moduleData[1].sonData.forEach(function(item1,index1){
+                item1.isSelected = false;
+              });
+            }
+          }
+          if(items.type == "indexCase"){
+            if(items.type==item.type&&!item.isSelected){
+              $this.searchData.indexData.moduleData[2].selectedModuleType = [];
+              $this.searchData.indexData.moduleData[2].sonData.forEach(function(item1,index1){
+                item1.isSelected = false;
+              });
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 首页的关于我们模块包换模块选中状态改变事件
+      changeIndexAboutState:function(items){
+        var $this = this;
+        $this.searchData.indexData.moduleData[0].selectedModuleType = [];
+        $this.searchData.indexData.moduleData[0].sonData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.indexData.moduleData[0].selectedModuleType.push(item.type);
+          }
+        });
+        console.log($this.searchData.indexData.moduleData[0].selectedModuleType);
+      },
+      // 首页的热销产品模块包换模块选中状态改变事件
+      changeIndexProductState:function(items){
+        var $this = this;
+        $this.searchData.indexData.moduleData[1].selectedModuleType = [];
+        $this.searchData.indexData.moduleData[1].sonData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.indexData.moduleData[1].selectedModuleType.push(item.type);
+          }
+        });
+        console.log($this.searchData.indexData.moduleData[1].selectedModuleType);
+      },
+      // 首页的经典案例模块包换模块选中状态改变事件
+      changeIndexCaseState:function(items){
+        var $this = this;
+        $this.searchData.indexData.moduleData[2].selectedModuleType = [];
+        $this.searchData.indexData.moduleData[2].sonData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.indexData.moduleData[2].selectedModuleType.push(item.type);
+          }
+        });
+        console.log($this.searchData.indexData.moduleData[2].selectedModuleType);
+      },
+      // 关于我们模块选中状态改变事件
+      changeAboutModuleState:function(items){
+        var $this = this;
+        $this.searchData.aboutData.moduleData.forEach(function(item,index){
+          if(items.type == item.type&&item.isSelected){
+            item.selectedModuleType.push(item.type);
+          }else{
+            item.selectedModuleType = [];
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 产品列表模块选中状态改变事件
+      changeProductListModuleState:function(items){
+        var $this = this;
+        $this.searchData.productListData.moduleData.forEach(function(item,index){
+          if((items.type=="productCateList"||items.type == "productImgList")&&items.isSelected){
+            if(item.type == "productComboList"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="productComboList"&&items.isSelected){
+            if((item.type=="productCateList"||item.type == "productImgList")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == "productCateList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleCateList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "productImgList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleImgList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "productComboList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 产品详情模块选中状态改变事件
+      changeProductDetailModuleState:function(items){
+        var $this = this;
+        $this.searchData.productDetailData.moduleData.forEach(function(item,index){
+          if((items.type=="productImgArticle"||items.type == "productMainArticle"||items.type == "productMessage")&&items.isSelected){
+            if(item.type == "productComboArticle"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="productComboArticle"&&items.isSelected){
+            if((item.type=="productImgArticle"||item.type == "productMainArticle"||item.type == "productMessage")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == "productImgArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleImgArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "productMainArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleMainArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "productMessage"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleMessage");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "productComboArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 案例列表模块选中状态改变事件
+      changeCaseListModuleState:function(items){
+        var $this = this;
+        $this.searchData.caseListData.moduleData.forEach(function(item,index){
+          if((items.type=="caseCateList"||items.type == "caseImgList")&&items.isSelected){
+            if(item.type == "caseComboList"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="caseComboList"&&items.isSelected){
+            if((item.type=="caseCateList"||item.type == "caseImgList")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == "caseCateList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleCateList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "caseImgList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleImgList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "caseComboList"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboList");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 案例详情模块选中状态改变事件
+      changeCaseDetailModuleState:function(items){
+        var $this = this;
+        $this.searchData.caseDetailData.moduleData.forEach(function(item,index){
+          if((items.type=="caseImgArticle"||items.type == "caseMainArticle"||items.type == "caseMessage")&&items.isSelected){
+            if(item.type == "caseComboArticle"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="caseComboArticle"&&items.isSelected){
+            if((item.type=="caseImgArticle"||item.type == "caseMainArticle"||item.type == "caseMessage")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type == "caseImgArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleImgArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "caseMainArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleMainArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "caseMessage"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleMessage");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "caseComboArticle"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboArticle");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 联系我们模块选中状态改变事件
+      changeContactModuleState:function(items){
+        var $this = this;
+        $this.searchData.contactData.moduleData.forEach(function(item,index){
+          if(items.type=="contactMessage"&&items.type == item.type&&item.isSelected){
+            item.selectedModuleType.push("moduleMessage");
+          }else if(items.type=="moduleContact"&&items.type == item.type&&item.isSelected){
+            item.selectedModuleType.push("moduleContact");
+          }else{
+            item.selectedModuleType = [];
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 长尾词页模块选中状态改变事件
+      changeLongTailWordModuleState:function(items){
+        var $this = this;
+        $this.searchData.longTailWordData.moduleData.forEach(function(item,index){
+          if((items.type=="longTailWordProduct"||items.type == "longTailWordList"||items.type=="longTailWordMessage")&&items.isSelected){
+            if(item.type == "moduleComboLongTailWord"&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="moduleComboLongTailWord"&&items.isSelected){
+            if((item.type=="longTailWordProduct"||item.type == "longTailWordList"||item.type=="longTailWordMessage")&&item.isSelected){
+              item.isSelected = false;
+            }
+          }
+          if(items.type=="longTailWordMessage"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleMessage");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type=="moduleComboLongTailWord"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboLongTailWord");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type=="longTailWordComboNews"){
+            if(items.type == item.type&&item.isSelected){
+              item.selectedModuleType.push("moduleComboNews");
+            }else{
+              item.selectedModuleType = [];
+            }
+          }
+          if(items.type == "longTailWordProduct"){
+            if(items.type==item.type&&!item.isSelected){
+              $this.searchData.longTailWordData.moduleData[0].selectedModuleType = [];
+              $this.searchData.longTailWordData.moduleData[0].sonData.forEach(function(item1,index1){
+                item1.isSelected = false;
+              });
+            }
+          }
+          if(items.type == "longTailWordList"){
+            if(items.type==item.type&&!item.isSelected){
+              $this.searchData.longTailWordData.moduleData[2].selectedModuleType = [];
+              $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
+                item1.isSelected = false;
+              });
+            }
+          }
+        });
+        console.log(items.selectedModuleType);
+      },
+      // 长尾词页热销产品选中状态改变事件
+      changeHotProductState:function(items){
+        var $this = this;
+        $this.searchData.longTailWordData.moduleData[0].selectedModuleType = [];
+        $this.searchData.longTailWordData.moduleData[0].sonData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.longTailWordData.moduleData[0].selectedModuleType.push(item.type);
+          }
+        });
+        console.log($this.searchData.longTailWordData.moduleData[0].selectedModuleType);
+      },
+      // 长尾词页长尾词列表选中状态改变事件
+      changeProductListState:function(items){
+        var $this = this;
+        $this.searchData.longTailWordData.moduleData[2].selectedModuleType = [];
+        $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.longTailWordData.moduleData[2].selectedModuleType.push(item.type);
+          }
+        });
+        console.log($this.searchData.longTailWordData.moduleData[2].selectedModuleType);
+      },
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+  .search-page{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 30px 80px;
+  }
+.item-search{
+  width: 100%;
+  @extend %clearfix;
+  margin-top: 30px;
+  h2{
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    font-size: 20px;
+  }
+  .item-body{
+    width: 100%;
+    @extend %clearfix;
+    margin-top: 10px;
+    .el-radio,.el-checkbox{
+        margin:0 10px 10px 0;
+        float:left;
+    }
+    .inline-body{
+      float:left;
+      .inline-font{
+        height: 40px;
+        line-height: 40px;
+      }
+      .left-font{
+        margin-left: 20px;
+      }
+      .num-input{
+        width: 60px;
+        margin: 0 10px;
+      }
+      .inline-font,.inline-content{
+        float:left;
+      }
+      .inline-content{
+        .iconfont{
+          display: inline-block;
+          width: 32px;
+          height: 32px;
+          margin: 4px 20px 0 0;
+          border: 1px solid #e6e6e6;
+          border-radius: 4px;
+          line-height: 30px;
+          text-align: center;
+          cursor: pointer;
+          font-size: 18px;
+          color: $primary;
+        }
+      }
+    }
+  }
+  .sub-search{
+    width: 100%;
+    @extend %clearfix;
+  }
+}
+.abs-dialog{
+    position: absolute;
+    .dialog-panel{
+      border-radius: 4px;
+    }
+  }
+.abs-dialog.hide{
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+
+.abs-dialog.show{
+  opacity: 1;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+}
+.abs-dialog{
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  overflow: hidden;
+  z-index: 1080;
+  -webkit-transition: .4s all ease-in-out;
+  transition: .4s all ease-in-out;
+  &:after{
+    content:'';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+    position: absolute;
+    left:0;
+    top:0;
+  }
+  .dialog-panel{
+    position: absolute;
+    background: #fff;
+    z-index: 1;
+    overflow: hidden;
+    left: 60px;
+    top: 60px;
+    right:60px;
+    bottom: 60px;
+    padding: 49px 0 81px;
+    .dialog-header{
+      position: absolute;
+      left:0;
+      top:0;
+      width: 100%;
+      height: 49px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #e6e6e6;
+      h2{
+        float:left;
+        height: 48px;
+        line-height: 48px;
+        font-size: 18px;
+        color: #333;
+        padding: 0 20px;
+      }
+      span{
+        display: block;
+        width: 48px;
+        height: 48px;
+        float:right;
+        text-align: center;
+        line-height: 48px;
+        font-size: 32px;
+        color: #666;
+        cursor: pointer;
+      }
+    }
+    .dialog-body{
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+    }
+    .dialog-footer{
+      padding: 20px;
+      border-top: 1px solid #e6e6e6;
+      overflow: hidden;
+      position: absolute;
+      left:0;
+      bottom:0;
+      width:100%;
+      text-align: right;
+    }
+  }
+}
+
+</style>

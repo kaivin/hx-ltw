@@ -1,108 +1,40 @@
 <template>
-    <div class="page-root" v-bind:class="{'is-new':isNew,'is-form':isForm,'is-style':isStyle}">
-        <div class="item-page lf-panel">
-            <div class="item-data">
-                <div class="item-header"><span v-on:click="closeNew">返回</span></div>
-                <div class="item-content"></div>
-            </div>
-            <div class="item-info">
-                <div class="item-panel">
-                    <p>如果你是个新人，这里将教会你如何运用系统</p>
-                    <span v-on:click="getNew">了解详情</span>
-                </div>
-            </div>
-        </div>
-        <div class="item-page center-panel">
-            <div class="item-data">
-                <div class="item-header"><span v-on:click="closeForm">返回</span></div>
-                <div class="item-content">
-                    <div class="form-panel">
-                        <div class="item-form">
-                            <div class="item-title">适用页面：</div>
-                            <div class="item-body">
-                                <el-checkbox v-model="checked3" label="首页" border></el-checkbox>
-                                <el-checkbox v-model="checked4" label="关于我们" border></el-checkbox>
-                                <el-checkbox v-model="checked3" label="列表页" border></el-checkbox>
-                                <el-checkbox v-model="checked4" label="详情页" border></el-checkbox>
-                                <el-checkbox v-model="checked3" label="联系我们" border></el-checkbox>
-                                <el-checkbox v-model="checked4" label="长尾词页" border></el-checkbox>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">适用框架：</div>
-                            <div class="item-body">
-                                <el-checkbox v-model="checked3" label="上中下" border></el-checkbox>
-                                <el-checkbox v-model="checked4" label="上左右下" border></el-checkbox>
-                                <el-checkbox v-model="checked3" label="侧边固定导航" border></el-checkbox>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">所属模块：</div>
-                            <div class="item-body"> 
-                                <el-radio v-model="radio7" label="1" border>页头</el-radio>
-                                <el-radio v-model="radio7" label="2" border>banner</el-radio>
-                                <el-radio v-model="radio7" label="2" border>组合头</el-radio>
-                                <el-radio v-model="radio7" label="2" border>服务</el-radio>
-                                <el-radio v-model="radio7" label="2" border>合作伙伴</el-radio>
-                                <el-radio v-model="radio7" label="2" border>环境</el-radio>
-                                <el-radio v-model="radio7" label="2" border>图文列表</el-radio>
-                                <el-radio v-model="radio7" label="2" border>文字列表</el-radio>
-                                <el-radio v-model="radio7" label="2" border>表单</el-radio>
-                                <el-radio v-model="radio7" label="2" border>联系信息</el-radio>
-                                <el-radio v-model="radio7" label="2" border>分类列表</el-radio>
-                                <el-radio v-model="radio7" label="2" border>页脚</el-radio>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">有效宽度：</div>
-                            <div class="item-body">
-                                <el-checkbox v-model="checked3" label="1440" border></el-checkbox>
-                                <el-checkbox v-model="checked4" label="1280" border></el-checkbox>
-                                <el-checkbox v-model="checked3" label="960" border></el-checkbox>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">添加人：</div>
-                            <div class="item-body">
-                                <el-radio v-model="radio7" label="1" border>聂亚兵</el-radio>
-                                <el-radio v-model="radio7" label="2" border>张校远</el-radio>
-                                <el-radio v-model="radio7" label="2" border>赵亚雄</el-radio>
-                                <el-radio v-model="radio7" label="2" border>王军凯</el-radio>
-                                <el-radio v-model="radio7" label="2" border>聂俊辉</el-radio>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">html代码：</div>
-                            <div class="item-body">
-                                <el-input type="textarea" v-model="formData.htmlString"></el-input>
-                            </div>
-                        </div>
-                        <div class="item-form">
-                            <div class="item-title">css样式：</div>
-                            <div class="item-body">
-                                <el-input type="textarea" v-model="formData.cssString"></el-input>
-                            </div>
-                        </div>
-                        <div class="item-button">
-                            <el-button size="medium">提交代码</el-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="item-info">
-                <div class="item-panel">
-                    <p>如果你是贡献者，这里会记录你每一次的贡献</p>
-                    <span v-on:click="showForm">贡献代码</span>
-                </div>
-            </div>
-        </div>
-        <div class="item-page rt-panel">
-            <div class="item-info">
-                <div class="item-panel">
-                    <p>如果你是搬运者，这里能给你初始化公共样式</p>
-                    <span v-on:click="copyStyle">复制样式</span>
-                </div>
-            </div>
+    <div class="page-root">
+        <div class="item-page">
+            <h2>如果你需要从这里搬运代码，组合一个长尾词站，以下流程将帮到你：</h2>
+            <p>1. 该系统站点所在页面，选择长尾词站各页面模块组合的搜索条件，之后进行搜索</p>
+            <p>2. 搜索结果中可以进行站点的页面预览，以及站点的压缩包下载；可先行在系统中预览一个站点的所有页面</p>
+            <p>3. 然后点击下载压缩包到本地，本地解压压缩包，压缩包中将包含程序自动组合的一个长尾词站的所有页面</p>
+            <p>4. 本地调试页面、包括样式微调、色调统一、文案修正、适配微调、以及部分模块的替换</p>
+            <p>5. 如有部分模块需要替换，则需要在该系统模块所在页面，搜索需要的模块，分别复制html代码以及css样式代码，粘贴到本地站点文件中</p>
+            <p>6. 当本地调试完成后，将站点页面发给程序即可</p>
+            <h2>如果你是代码贡献者，你需要知道：</h2>
+            <p>1. 本地写好模块，模块的根标签需要有一个统一样式名，命名格式：“名字首字母-序号”，例如：".wjk-0001"</p>
+            <p>2. 有效宽度有四种类型：100%，1440，1280，960</p>
+            <p>3. 侧边导航框架类型主体内容可以设置的有效宽度有：1280、960以及通屏三种，适配则需要在1600时将侧边导航隐藏，改为头部导航</p>
+            <p>4. 代码适配完成后，在该系统模块所在页面，点击添加模块，填写并提交表单</p>
+            <h2>模块属性解释</h2>
+            <p><span>01</span><strong>页头：</strong>分侧边固定显示、页头显示</p>
+            <p><span>02</span><strong>banner: </strong>分只适用于首页、不适用首页两种（不适用首页则适用所有其他页面、面包屑模块与该模块一体）</p>
+            <p><span>03</span><strong>组合页头：</strong>页头、banner一体（首页以外的页面面包屑与该模块一体）</p>
+            <p><span>04</span><strong>图文列表：</strong>所有带图片的列表、包括首页带标题的产品列表、案例列表；列表页的产品列表、案例列表；长尾词页的产品列表、案例列表；详情页的相关产品、案例列表；如匹配到没有标题文本的，自行添加标题文本</p>
+            <p><span>05</span><strong>文字列表：</strong>所有不带图片的列表，其他同图文列表</p>
+            <p><span>06</span><strong>组合列表：</strong>首页、产品、案例、长尾词列表页，如果是左右布局结构，则写成一个模块，其模块属性是组合列表（首页有独特布局格式的也属于组合列表，只是在选择适用页面时，只适用首页）</p>
+            <p><span>07</span><strong>分类列表：</strong>产品列表页的分类模块</p>
+            <p><span>08</span><strong>图文详情：</strong>产品、案例详情页的详细参数模块</p>
+            <p><span>09</span><strong>正文详情：</strong>产品、案例详情页的正文部分模块</p>
+            <p><span>10</span><strong>组合详情：</strong>产品、案例详情页，如果是左右布局结构，则写成一个模块，其模块属性是组合详情</p>
+            <p><span>11</span><strong>组合长尾词：</strong>长尾词页面为左右布局结构(留言板也只在一侧显示)</p>
+            <p><span>12</span><strong>组合新闻：</strong>只适合放在页脚上方的新闻、产品文字列表组合模块；该模块也可包含联系地址、关于我们等</p>
+            <p><span>13</span><strong>公司简介：</strong>隶属于关于我们</p>
+            <p><span>14</span><strong>公司文化：</strong>隶属于关于我们</p>
+            <p><span>15</span><strong>公司服务：</strong>隶属于关于我们，其包括：服务流程、售后服务</p>
+            <p><span>16</span><strong>公司实力：</strong>隶属于关于我们，其包括：生产能力、发展历程、公司荣誉、公司环境、数字化展示模块（整个模块就只是几个突出数字的那种模块）</p>
+            <p><span>17</span><strong>国际合作：</strong>隶属于关于我们</p>
+            <p><span>18</span><strong>联系方式：</strong>独立的展示邮箱、地址、商务通链接的模块</p>
+            <p><span>19</span><strong>留言板：</strong>分带联系方式、不带联系方式两种</p>
+            <p><span>20</span><strong>装饰模块：</strong>可适用所有页面，暂定为以引导用户点击或提交邮箱账号用的单独模块，除该作用相关信息外，无其他主要信息展示的模块</p>
+            <p><span>21</span><strong>页脚：</strong>页面底部信息，可包含返回顶部、移动端底部商务通</p>
         </div>
     </div>
 </template>
@@ -112,244 +44,37 @@ export default {
     name: 'defaultPage',
     data: function(){
         return {
-            isNew:false,
-            isForm:false,
-            isStyle:false,
-            formData:{
-                htmlString:'',
-                cssString:'',
-            }
         }
     },
     beforeCreate:function(){},
     computed:{},
     methods:{
-        getNew:function(){
-            var $this = this;
-            $this.isNew = true;
-        },
-        closeNew:function(){
-            var $this = this;
-            $this.isNew = false;
-        },
-        showForm:function(){
-            var $this = this;
-            $this.isForm = true;
-        },
-        closeForm:function(){
-            var $this = this;
-            $this.isForm = false;
-        },
-        copyStyle:function(){
-            var $this = this;
-            $this.isStyle = true;
-        }
     },
 }
 </script>
 
 <style lang="scss" scoped>
-.is-new{
-    .lf-panel{
-        left:0;
-        &:before{
-            background: none;
-        }
-        .item-info{
-            left: -100%;
-        }
-        .item-data{
-            left:0;
-            top: 0;
-        }
-    }
-    .center-panel{
-        left: 70%;
-    }
-    .rt-panel{
-        right: -140%;
-    }
-}
-.is-form{
-    .lf-panel{
-        left:-100%;
-    }
-    .center-panel{
-        .item-data{
-            top: 0;
-        }
-        .item-info{
-            top: 100%;
-        }   
-    }
-    .rt-panel{
-        right: -100%;
-    }
-}
 .item-page{
     width: 100%;
-    position: absolute;
-    top:0;
     height: 100%;
     transition: all .5s ease-in-out;
-    .item-data{
-        width: 100%;
-        height: 100%;
-        top: -100%;
-        background: #fff;
-        position: absolute;
-        transition: all .5s ease-in-out;
-        .item-header{
-            width: 100%;
-            position: absolute;
-            left:0;
-            border-bottom: 1px solid #e6e6e6;
-            overflow: hidden;
-            padding: 10px;
-            background: #f5f5f5;
-            span{
-                display: inline-block;
-                line-height: 30px;
-                font-size: 14px;
-                border: 1px solid #ddd;
-                padding: 0 16px;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+    overflow-y: auto;
+    padding: 0 80px 60px;
+    h2{
+        font-size: 24px;
+        line-height: 48px;
+        color: #333;
+        margin-top: 40px;
+    }
+    p{
+        font-size: 16px;
+        line-height: 28px;
+        margin-top: 10px;
+        >span{
+            font-weight: bold;
+            color: #18a900;
+            margin-right:10px;
         }
-        .item-content{
-            top:51px;
-            left:0;
-            bottom:0;
-            width: 100%;
-            overflow-y: auto;
-            position: absolute;
-        }
-    }
-    .item-info{
-        display: block;
-        position: absolute;
-        left:0;
-        top:0;
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        transition: all .5s ease-in-out;
-        cursor: pointer;
-        &:hover{
-            background: #f5f5f5;
-        }
-        .item-panel{
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-            p{
-                width: 100%;
-                padding: 0 20%;
-                font-size: 24px;
-                line-height: 36px;
-                color: #333;
-                text-align: center;
-            }
-            span{
-                display: inline-block;
-                padding: 6px 48px;
-                font-size: 24px;
-                line-height: 36px;
-                border-radius: 5px;
-                background: red;
-                margin-top: 30px;
-                color: #fff;
-            }
-        }
-    }
-}
-.lf-panel{
-    left: -70%;
-    z-index: 2;
-    &:before{
-        content:'';
-        display: block;
-        width: 1px;
-        position: absolute;
-        right:0;
-        top: 10%;
-        bottom: 10%;
-        background: #f5f5f5;
-        z-index: 2;
-    }
-    .item-data{
-        top:0;
-        left: -100%;
-    }
-    .item-info{
-        padding-left: 70%;
-    }
-}
-.center-panel{
-    left:0;
-    z-index: 1;
-    .item-data{
-        left:0;
-    }
-    .item-info{
-        padding: 0 30%;
-        z-index: 2;
-        .item-panel{
-            p{
-                padding: 0 28%;
-            }
-        }
-    }
-}
-.rt-panel{
-    right: -70%;
-    z-index: 2;
-    &:before{
-        content:'';
-        display: block;
-        width: 1px;
-        position: absolute;
-        left:0;
-        top: 10%;
-        bottom: 10%;
-        background: #f5f5f5;
-        z-index: 2;
-    }
-    .item-info{
-        padding-right: 70%;
-    }
-}
-.form-panel{
-    width: 100%;
-    padding: 20px;
-    @extend %clearfix;
-    .item-form{
-        width: 100%;
-        @extend %clearfix;
-        position: relative;
-        margin-top: 20px;
-        .item-title{
-            width:100%;
-            height: 32px;
-            line-height: 32px;
-            font-size: 14px;
-            color: #333;
-        }
-        .item-body{
-            width: 100%;
-            @extend %clearfix;
-            font-size:0;
-            .el-radio,.el-checkbox{
-                margin:0 10px 10px 0;
-            }
-        }
-    }
-    .item-button{
-        margin-top: 20px;
     }
 }
 </style>

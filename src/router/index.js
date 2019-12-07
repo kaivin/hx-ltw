@@ -19,34 +19,14 @@ const routes = [
                 name: 'defaultPage',
             },
             {
-                path: 'indexPage',
-                component: () => import('@/views/index'),
-                name: 'indexPage',
+                path: 'modulePage',
+                component: () => import('@/views/module'),
+                name: 'modulePage',
             },
             {
-                path: 'aboutPage',
-                component: () => import('@/views/about'),
-                name: 'aboutPage',
-            },
-            {
-                path: 'listPage',
-                component: () => import('@/views/list'),
-                name: 'listPage',
-            },
-            {
-                path: 'articlePage',
-                component: () => import('@/views/article'),
-                name: 'articlePage',
-            },
-            {
-                path: 'contactPage',
-                component: () => import('@/views/contact'),
-                name: 'contactPage',
-            },
-            {
-                path: 'longTailWordsPage',
-                component: () => import('@/views/longTailWords'),
-                name: 'longTailWordsPage',
+                path: 'websitePage',
+                component: () => import('@/views/website'),
+                name: 'websitePage',
             },
         ]
     },

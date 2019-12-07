@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-      <div class="logo" v-on:click="goDefault">红星长尾词管理系统(组合三)</div>
+      <div class="logo" v-on:click="clickDefault"><router-link to="/">红星长尾词管理系统(组合三)</router-link></div>
   </div>
 </template>
 
@@ -8,10 +8,9 @@
 export default {
     name:"headerModel",
     methods:{
-        goDefault:function(){
-            var $this = this;
-            var router = $this.$router;
-            router.push({path: '/'});
+        clickDefault:function(){
+            this.$store.dispatch('header/changeActive','default');
+            this.$store.dispatch('header/changePageType','default');
         }
     }
 }
@@ -33,6 +32,11 @@ export default {
             color: #fff;
             padding:0 20px;
             cursor: pointer;
+            a{
+                line-height: 64px;
+                font-size: 16px;
+                color: #fff;
+            }
         }
     }
 </style>

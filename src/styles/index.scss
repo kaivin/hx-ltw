@@ -23,12 +23,7 @@ html,body,#app,#app > .el-container{
     box-sizing:border-box; 
     position:relative; 
 }
-.page-root{
-    width:100%; 
-    height:100%; 
-    overflow:hidden; 
-    position: relative;
-}
+.page-root{width:100%; height:100%; overflow:hidden; position: relative;}
 .page-scroll{
     width: 100%;
     height: 100%;

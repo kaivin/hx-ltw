@@ -5,7 +5,7 @@
       <el-header>
         <header-model />
       </el-header>
-      <el-main>
+      <el-main v-bind:class="isOpened?'show':'hide'">
         <transition 
           name="fade-transform"
           mode="out-in">
@@ -18,6 +18,7 @@
 
 <script>
 import { Sidebar , HeaderModel } from './components';
+import { mapGetters } from 'vuex';
 export default {
   name: 'Layout',
   components: {
@@ -25,13 +26,14 @@ export default {
     HeaderModel
   },
   mounted() {
-      window.addEventListener('load', () => { // 滚动事件变为 scroll
-          if (this.$route.path !== '/default') { // /print 表示首页
-                this.$router.replace('/default') // 切换到首页
-          }
-      });
   },
   computed:{
+    ...mapGetters([
+        'sidebar',
+    ]),
+    isOpened(){
+      return this.sidebar.opened;
+    },
   },
   methods: {
   }
@@ -47,6 +49,12 @@ export default {
 .el-main {
   background-color: #fff;
   overflow: hidden!important;
+  transition: padding .5s linear;
+}
+.el-main.show{
   padding:0 0 0 240px!important;
+}
+.el-main.hide{
+  padding:0!important;
 }
 </style>
