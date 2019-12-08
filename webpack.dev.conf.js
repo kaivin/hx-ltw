@@ -281,7 +281,7 @@ module.exports={
     // },
     // 开发服务配置项
     devServer: {
-        port: 8080,
+        port: 2080,
         contentBase: path.resolve(__dirname, 'dist'),
         historyApiFallback: true,
         host: ip,

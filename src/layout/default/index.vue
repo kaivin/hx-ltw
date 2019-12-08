@@ -1,11 +1,10 @@
 <template>
   <el-container>
-    <sidebar />
     <el-container>
       <el-header>
         <header-model />
       </el-header>
-      <el-main v-bind:class="isOpened?'show':'hide'">
+      <el-main>
         <transition 
           name="fade-transform"
           mode="out-in">
@@ -17,23 +16,16 @@
 </template>
 
 <script>
-import { Sidebar , HeaderModel } from './components';
+import { HeaderModel } from './components';
 import { mapGetters } from 'vuex';
 export default {
   name: 'Layout',
   components: {
-    Sidebar,
     HeaderModel
   },
   mounted() {
   },
   computed:{
-    ...mapGetters([
-        'sidebar',
-    ]),
-    isOpened(){
-      return this.sidebar.opened;
-    },
   },
   methods: {
   }
@@ -50,11 +42,6 @@ export default {
   background-color: #fff;
   overflow: hidden!important;
   transition: padding .5s linear;
-}
-.el-main.show{
-  padding:0 0 0 240px!important;
-}
-.el-main.hide{
   padding:0!important;
 }
 </style>
