@@ -316,7 +316,8 @@ export default {
           dialogType:'',
         },
         searchData:{
-          publicCssData:{isSelected:true,isDisabled:true,name:'公共样式',publicCssCode:''},
+          publicCssData:{isSelected:true,isDisabled:true,name:'公共样式',publicCssCode:'@charset "utf-8";*,*:after,&:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-webkit-touch-callout:none;margin:0;padding:0;}a,abbr,acronym,address,big,blockquote,body,caption,cite,code,dd,dl,dt,fieldset,form,h1,time,h2,h3,h4,h5,h6,html,img,ins,kbd,label,legend,li,ol,p,pre,q,s,samp,small,span,strike,strong,ul{border:0;outline:0;vertical-align:middle;}body{font-family:Arial,"Open Sans",sans-serif,"Heiti SC","Helvetica","HelveticaNeue","Droidsansfallback","Droid Sans";font-size:16px;line-height:32px;text-align:left;background:#fff;font-style:normal;font-weight:100;color:#5a5b5c;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0;}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}a:link,a:active,a:visited,a:hover{-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-tap-highlight-color:transparent;}button{border-radius:0px;-webkit-border-radius:0px;outline:none;}input{border-radius:0;-webkit-appearance:none;-webkit-border-radius:0px;}input,select{border-radius:0;outline:none;}input:-ms-clear{display:none;}input,textarea{border:0;-webkit-appearance:none;}textarea{resize:none;outline:none;}img{border:0;vertical-align:middle;MAX-WIDTH:100%!important;HEIGHT:auto!important;_width:expression(this.width > 100% ? "100%":this.width)!important;}td{padding:8px 5px;}ul,li{list-style:none;}button{cursor:pointer;}h1,h2,h3,h4,h5,h6{font-weight:700;font-variant:normal;white-space:normal;}a:link,a:visited{color:#42474e;text-decoration:none;}a:hover,a:active{color:rgb(212,42,42);text-decoration:underline;}.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;font-size:0px;}.container{clear:both;width:1440px;margin:0 auto;padding:0px;}@media (max-width:1600px){body{line-height:28px;}.container{width:1280px;}}@media (max-width:1440px){body{line-height:26px;font-size:14px;}.container{width:1120px;}}@media (max-width:1280px){body{line-height:24px;}.container{width:960px;}}@media screen and (max-width:992px){.container{width:750px;}}@media screen and (max-width:782px){.container{width:100%;}}'},
+          selectedMaxWidth:['100%','1280'],
           maxWidthData:[
               {type:"100%",name:"通屏",isSelected:true,isDisabled:false},
               {type:"1440",name:"1440",isSelected:false,isDisabled:false},
@@ -429,10 +430,10 @@ export default {
               {type:'0',name:"否"},
           ],
           fixedIframeData:{
-            iframeHtmlCode1:"",
-            iframeHtmlCode2:"",
-            iframeHtmlCode3:"",
-            iframeCssCode:"",
+            iframeHtmlCode1:'<div class="aside">',
+            iframeHtmlCode2:'</div><div class="main">',
+            iframeHtmlCode3:'</div>',
+            iframeCssCode:'.aside{width:240px;position:fixed;left:0;top:0;height:100vh;z-index:999;background:#ccc;}.main{clear:both;margin:0 auto;padding:0px 0px 0px 240px;}@media (max-width:1600px){.aside{position:static;height:auto;width:100%;padding:0;}.main{clear:both;margin:0 auto;padding:0;}}',
           },
           indexData:{
             moduleData:[
@@ -970,6 +971,13 @@ export default {
             item.isSelected=false;
           }
         });
+        $this.searchData.selectedMaxWidth=[];
+        $this.searchData.maxWidthData.forEach(function(item,index){
+          if(item.isSelected){
+            $this.searchData.selectedMaxWidth.push(item.type);
+          }
+        });
+        console.log($this.searchData.selectedMaxWidth);
       },
       // 获取有效宽度已选个数
       getMaxWidthLength:function(){
@@ -1621,6 +1629,7 @@ export default {
           }
         });
         console.log($this.requestionData);
+        console.log(JSON.stringify($this.requestionData));
         var websiteData = [
           {websitID:0,maxWidth:'1440,通屏',headerFix:'0',
             publicModuleData:[

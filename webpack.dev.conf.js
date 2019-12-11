@@ -281,13 +281,21 @@ module.exports={
     // },
     // 开发服务配置项
     devServer: {
-        port: 2080,
+        port: 2070,
         contentBase: path.resolve(__dirname, 'dist'),
-        historyApiFallback: true,
         host: ip,
         overlay:true,
         hot:true,
         inline:true,
+        proxy:{
+            '/api':{// 这里会替代我们在 target 里的写的后端的请求接口
+                target:'http://172.16.10.121:8343',// 后端请求的域名或ip：端口号部分
+                changeOrigin: true, // 是否允许跨域
+                pathRewrite:{
+                    '^/api':'', // 重写
+                }
+            }
+        },
         after() {
             open(`http://${ip}:${this.port}`)
             .then(() => {
@@ -296,7 +304,7 @@ module.exports={
             .catch(err => {
                 console.log(chalk.red(err));
             });
-        }
+        },
     },
     resolve: {
         // 设置可省略文件后缀名

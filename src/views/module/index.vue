@@ -1,10 +1,10 @@
 <template>
   <div class="page-root">
-      <div class="module-panel" v-bind:style="{paddingTop:searchData.isSearchAbsolute&&searchData.isSearchShow?searchData.searchHeight + 53 +'px':'53px'}">
-          <div class="item-header"><span class="iconfont icon-add" v-on:click="showModuleDialog('add')">添加模块</span></div>
-          <div class="abs-search" ref="search" v-bind:class="{'show':searchData.isSearchShow,'abs':searchData.isSearchAbsolute}" v-bind:style="{top:searchData.isSearchAbsolute&&searchData.isSearchShow?'53px':searchData.isSearchAbsolute&&!searchData.isSearchShow?-(searchData.searchHeight-53) +'px':'0'}">
-            <div class="search-panel">
-              <div class="item-search module-select">
+      <div class="ltw-module-panel" v-bind:style="{paddingTop:searchData.isSearchAbsolute&&searchData.isSearchShow?searchData.searchHeight + 53 +'px':'53px'}">
+          <div class="ltw-item-header"><span class="iconfont icon-add" v-on:click="showModuleDialog('add')">添加模块</span></div>
+          <div class="ltw-abs-search" ref="search" v-bind:class="{'show':searchData.isSearchShow,'abs':searchData.isSearchAbsolute}" v-bind:style="{top:searchData.isSearchAbsolute&&searchData.isSearchShow?'53px':searchData.isSearchAbsolute&&!searchData.isSearchShow?-(searchData.searchHeight-53) +'px':'0'}">
+            <div class="ltw-search-panel">
+              <div class="ltw-item-search ltw-module-select">
                 <el-select v-model="searchData.selectedModuleType" v-on:change="changeSelectedModuleType" multiple clearable placeholder="请选择模块类型">
                   <el-option
                     v-for="item in searchData.moduleType"
@@ -14,7 +14,17 @@
                   </el-option>
                 </el-select>
               </div>
-              <div class="item-search width-select">
+              <div class="ltw-item-search ltw-module-select">
+                <el-select v-model="searchData.selectedPageType" v-on:change="changeSelectedPageType" multiple clearable placeholder="请选择适用页面">
+                  <el-option
+                    v-for="item in searchData.pageType"
+                    :key="item.type"
+                    :label="item.name"
+                    :value="item.type">
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="ltw-item-search ltw-width-select">
                 <el-select v-model="searchData.selectedMaxWidth" v-on:change="changeSelectedMaxWidth" multiple clearable placeholder="请选择有效宽度">
                   <el-option
                     v-for="item in searchData.maxWidth"
@@ -24,8 +34,8 @@
                   </el-option>
                 </el-select>
               </div>
-              <div class="item-search author-select">
-                <el-select v-model="searchData.selectedAuhtor" v-on:change="changeSelectedAuthor" multiple clearable placeholder="请选择添加人">
+              <div class="ltw-item-search ltw-author-select">
+                <el-select v-model="searchData.selectedAuthors" v-on:change="changeSelectedAuthor" multiple clearable placeholder="请选择添加人">
                   <el-option
                     v-for="item in searchData.authors"
                     :key="item.key"
@@ -34,107 +44,107 @@
                   </el-option>
                 </el-select>
               </div>
-              <div class="item-search guid-panel"><el-input placeholder="请输入模块唯一标识类名" v-model="searchData.moduleGUID" clearable></el-input></div>
-              <div class="item-search btn-panel"><el-button type="primary" v-on:click="getSearchResult">搜索</el-button></div>
+              <div class="ltw-item-search ltw-guid-panel"><el-input placeholder="请输入模块唯一标识类名" v-model="searchData.moduleGUID" clearable></el-input></div>
+              <div class="ltw-item-search ltw-btn-panel"><el-button type="primary" v-on:click="getSearchResult">搜索</el-button></div>
             </div>
-            <span class="menu-panel iconfont" v-if="searchData.isSearchAbsolute" v-bind:class="searchData.isSearchShow?'icon-up':'icon-down'" v-on:click="toggleSearchPanel"></span>
+            <span class="ltw-menu-panel iconfont" v-if="searchData.isSearchAbsolute" v-bind:class="searchData.isSearchShow?'icon-up':'icon-down'" v-on:click="toggleSearchPanel"></span>
           </div>
-          <div class="item-content" v-bind:class="searchData.isSearchShow?'show':'hide'">
-            <div class="module-list" v-if="searchData.isModuleShow">
-              <div class="item-module" v-for="(item,index) in moduleData" v-bind:key="index">
-                <div class="module-header"><span>模块标识：{{item.moduleGUID}}</span><span>添加时间：{{item.createdDate}}</span></div>
-                <div class="module-body" v-html="item.showCode"></div>
-                <div class="module-footer">
+          <div class="ltw-item-content" v-bind:class="searchData.isSearchShow?'show':'hide'">
+            <div class="ltw-module-list" v-if="searchData.isModuleShow">
+              <div class="ltw-item-module" v-for="(item,index) in moduleData" v-bind:key="index">
+                <div class="ltw-module-header"><span>模块标识：{{item.moduleGUID}}</span><span>添加时间：{{item.createdDate}}</span></div>
+                <div class="ltw-module-body" v-html="item.showCode"></div>
+                <div class="ltw-module-footer">
                   <span>添加人：{{item.author}}</span>
-                  <div class="edit-button">
-                    <span class="copy-code" v-clipboard:copy="item.copyHtmlCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制代码</span>
-                    <span class="copy-code" v-clipboard:copy="item.copyCssCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制样式</span>
-                    <span class="btn-edit" v-on:click="showModuleDialog('',item)">编辑</span>
-                    <span class="btn-delete" v-on:click="deleteModel(item)">删除</span>
+                  <div class="ltw-edit-button">
+                    <span class="ltw-copy-code" v-clipboard:copy="item.copyHtmlCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制代码</span>
+                    <span class="ltw-copy-code" v-clipboard:copy="item.copyCssCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制样式</span>
+                    <span class="ltw-btn-edit" v-on:click="showModuleDialog('',item)">编辑</span>
+                    <span class="ltw-btn-delete" v-on:click="deleteModel(item)">删除</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="empty-panel" v-else>
+            <div class="ltw-empty-panel" v-else>
               <p v-if="searchData.isModuleEmpty">暂无相关模块数据，可以在这里<span v-on:click="showModuleDialog('add')">添加模块</span>相关数据</p>
               <p v-else>请选择你要查询的模块类型</p>
             </div>
           </div>
-          <div class="abs-dialog" v-bind:class="moduleDialog.isModuleDialog?'show':'hide'">
-            <div class="dialog-panel">
-              <div class="dialog-header"><h2>{{moduleDialog.moduleDialogTitle}}</h2><span class="iconfont icon-close" v-on:click="closeModuleDialog"></span></div>
-              <div class="dialog-body">
-                <div class="form-panel">
-                    <div class="item-form">
-                        <div class="item-title">模块标识类名：</div>
-                        <div class="item-body">
+          <div class="ltw-abs-dialog" v-bind:class="moduleDialog.isModuleDialog?'show':'hide'">
+            <div class="ltw-dialog-panel">
+              <div class="ltw-dialog-header"><h2>{{moduleDialog.moduleDialogTitle}}</h2><span class="iconfont icon-close" v-on:click="closeModuleDialog"></span></div>
+              <div class="ltw-dialog-body">
+                <div class="ltw-form-panel">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">模块标识类名：</div>
+                        <div class="ltw-item-body">
                             <el-input v-model="formData.moduleGUID" v-bind:disabled="moduleDialog.isDisabled" placeholder="模块的唯一标识类名"></el-input>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">所属模块：</div>
-                        <div class="item-body"> 
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">模块分类：</div>
+                        <div class="ltw-item-body"> 
                             <el-radio v-for="(item,index) in formData.moduleType" v-bind:key="index" v-model="formData.selectedModuleType" v-bind:label="item.type" v-on:change="changeModuleTypeState" v-bind:disabled="moduleDialog.isDisabled" border>{{item.name}}</el-radio>
                         </div>
-                        <div class="item-des">{{formData.selectedModuleTypeDes}}</div>
+                        <div class="ltw-item-des">{{formData.selectedModuleTypeDes}}</div>
                     </div>
-                    <div class="item-form" v-if="isHeader">
-                        <div class="item-title">侧边固定：</div>
-                        <div class="item-body"> 
+                    <div class="ltw-item-form" v-if="isHeader">
+                        <div class="ltw-item-title">侧边固定：</div>
+                        <div class="ltw-item-body"> 
                             <el-radio v-for="(item,index) in formData.headerFixedData" v-bind:key="index" v-model="formData.headerFixed" v-bind:label="item.type" v-on:change="changeHeaderFixedState" border>{{item.name}}</el-radio>
                         </div>
                     </div>
-                    <div class="item-form" v-if="isContactMessage">
-                        <div class="item-title">是否包含联系方式：</div>
-                        <div class="item-body"> 
+                    <div class="ltw-item-form" v-if="isContactMessage">
+                        <div class="ltw-item-title">是否包含联系方式：</div>
+                        <div class="ltw-item-body"> 
                             <el-radio v-for="(item,index) in formData.coverContactInfo" v-bind:key="index" v-model="formData.coverContact" v-bind:label="item.type" v-on:change="changeCoverContactState" border>{{item.name}}</el-radio>
                         </div>
                     </div>
-                    <div class="item-form" v-if="isBanner">
-                        <div class="item-title">父级模块标识类名：<span>banner以及组合页头会存在首页和内页必须成套搭配的情况，提交时内页的该模块需要在这里填上首页的模块唯一标识类名</span></div>
-                        <div class="item-body">
+                    <div class="ltw-item-form" v-if="isBanner">
+                        <div class="ltw-item-title">父级模块标识类名：<span>banner以及组合页头会存在首页和内页必须成套搭配的情况，提交时内页的该模块需要在这里填上首页的模块唯一标识类名</span></div>
+                        <div class="ltw-item-body">
                             <el-input v-model="formData.parentModuleGUID" placeholder="模块的唯一标识类名"></el-input>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">适用页面：</div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">适用页面：</div>
+                        <div class="ltw-item-body">
                             <el-checkbox v-for="(item,index) in formData.pageType" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changePageTypeState(item)" v-bind:disabled="item.isDisabled" border></el-checkbox>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">有效宽度：</div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">有效宽度：</div>
+                        <div class="ltw-item-body">
                             <el-radio v-for="(item,index) in formData.maxWidthData" v-bind:key="index" v-model="formData.selectedMaxWidth" v-bind:label="item.type" v-on:change="changeMaxWdithState" border>{{item.name}}</el-radio>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">添加人：</div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">添加人：</div>
+                        <div class="ltw-item-body">
                             <el-radio v-for="(item,index) in formData.authorData" v-bind:key="index" v-model="formData.selectedAuthor" v-bind:label="item.type" v-on:change="changeAuthorState" border>{{item.name}}</el-radio>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">使用类名：<span>模块中的所有靠近<em>="</em>的类名；例：class="wrapper wjk-0001"，其中wrapper符合规则</span></div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">使用类名：<span>模块中的所有靠近<em>="</em>的类名；例：class="wrapper wjk-0001"，其中wrapper符合规则</span></div>
+                        <div class="ltw-item-body">
                             <el-input v-model="formData.usedClasses" placeholder="多个类名使用逗号分隔"></el-input>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">html代码：</div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">html代码：</div>
+                        <div class="ltw-item-body">
                             <el-input type="textarea" v-model="formData.htmlCode"></el-input>
                         </div>
                     </div>
-                    <div class="item-form">
-                        <div class="item-title">css样式：</div>
-                        <div class="item-body">
+                    <div class="ltw-item-form">
+                        <div class="ltw-item-title">css样式：</div>
+                        <div class="ltw-item-body">
                             <el-input type="textarea" v-model="formData.cssCode"></el-input>
                         </div>
                     </div>
                 </div>
               </div>
-              <div class="dialog-footer"><el-button type="primary" v-on:click="saveModuleData">保存</el-button><el-button v-on:click="closeModuleDialog" type="info" plain>取消</el-button></div>
+              <div class="ltw-dialog-footer"><el-button type="primary" v-on:click="saveModuleData">保存</el-button><el-button v-on:click="closeModuleDialog" type="info" plain>取消</el-button></div>
             </div>
           </div>
       </div>
@@ -146,13 +156,15 @@ export default {
     name: 'modulePage',
     data: function(){
         return {
+            isAdd:false,
+            editID:0,
             moduleDialog:{
               isModuleDialog:false,
               moduleDialogTitle:'',
               isDisabled:false,
             },
             searchData:{
-              selectedModuleType:'',
+              selectedModuleType:[],
               moduleType:[
                 {type:'moduleHeader',name:'页头'},
                 {type:'moduleBanner',name:'banner'},
@@ -176,20 +188,29 @@ export default {
                 {type:'moduleDecoration',name:'装饰模块'},
                 {type:'moduleFooter',name:'页脚'},
               ],
-              selectedMaxWidth:'',
+              selectedMaxWidth:[],
               maxWidth:[
                 {key:"100%",name:"通屏"},
                 {key:"1440",name:"1440"},
                 {key:"1280",name:"1280"},
                 {key:"960",name:"960"},
               ],
-              selectedAuthor:"",
+              selectedAuthors:[],
               authors:[
                   {key:"nyb",name:"聂亚兵"},
                   {key:"zxy",name:"张校远"},
                   {key:"zyx",name:"赵亚雄"},
                   {key:"wjk",name:"王军凯"},
                   {key:"njh",name:"聂俊辉"},
+              ],
+              selectedPageType:[],
+              pageType:[
+                  {type:'index',name:'首页'},
+                  {type:'about',name:'关于我们'},
+                  {type:'list',name:'列表页'},
+                  {type:'article',name:'详情页'},
+                  {type:'contact',name:'联系我们'},
+                  {type:'longTailWord',name:'长尾词页'},
               ],
               moduleGUID:'',
               isModuleShow:false,
@@ -267,7 +288,8 @@ export default {
                 htmlCode:'',
                 cssCode:'',
             },
-            saveData:{}
+            searchParams:{},
+            saveData:{},
         }
     },
     beforeCreate:function(){},
@@ -279,6 +301,15 @@ export default {
           $this.$store.dispatch('header/changeActive','default');
           $this.$store.dispatch('header/changePageType','default');
           router.push({path: '/'});
+        },
+        // 时间格式转化
+        formateDate:function(datetime){
+          function addZero(num){
+            return (num < 10 ? "0" + num : num);
+          }
+          var d = new Date(datetime);
+          var formatedatetime = d.getFullYear() + '-' + addZero(d.getMonth()+1) + '-' +addZero(d.getDate()) + ' ' + addZero(d.getHours()) + ':' + addZero(d.getMinutes()) + ':' + addZero(d.getSeconds());
+          return formatedatetime;
         },
         // 代码复制成功提示
         onCopy: function (e) {
@@ -298,23 +329,26 @@ export default {
           if(type=='add'){
             $this.moduleDialog.isDisabled = false;
             $this.moduleDialog.moduleDialogTitle = "添加模块";
+            $this.isAdd = true;
           }else{
+            $this.isAdd = false;
             $this.moduleDialog.isDisabled = true;
             $this.moduleDialog.moduleDialogTitle = "编辑模块";
             $this.formData.selectedModuleType = items.moduleType;
+            $this.editID = items.ID;
             $this.formData.moduleType.forEach(function(item,index){
-              if(item.type == items.selectedModuleType){
+              if(item.type == items.moduleType){
                 $this.formData.selectedModuleTypeDes = item.descript;
               }
             });
-            if(items.selectedModuleType == "moduleHeader"){
+            if(items.moduleType == "moduleHeader"){
               $this.isHeader = true;
             }
             $this.formData.headerFixed = items.headerFixed;
-            if(items.selectedModuleType == "moduleMessage"){
+            if(items.moduleType == "moduleMessage"){
               $this.isContactMessage = true;
             }
-            if(items.selectedModuleType == "moduleBanner"||items.selectedModuleType == "moduleComboHeader"){
+            if(items.moduleType == "moduleBanner"||items.moduleType == "moduleComboHeader"){
               $this.isBanner = true;
             }
             $this.formData.pageType.forEach(function(item,index){
@@ -323,13 +357,13 @@ export default {
               if(isExist>0){
                 item.isSelected = true;
               }
-              if(items.selectedModuleType == "moduleHeader"||items.selectedModuleType == "moduleCateList"||items.selectedModuleType == "moduleImgArticle"||items.selectedModuleType == "moduleMainArticle"||items.selectedModuleType == "moduleComboArticle"||items.selectedModuleType == "moduleComboLongTailWord"||items.selectedModuleType == "moduleContact"||$this.formData.selectedModuleType == "moduleComboNews"||$this.formData.selectedModuleType == "moduleDecoration"||$this.formData.selectedModuleType == "moduleFooter"){
+              if(items.moduleType == "moduleHeader"||items.moduleType == "moduleCateList"||items.moduleType == "moduleImgArticle"||items.moduleType == "moduleMainArticle"||items.moduleType == "moduleComboArticle"||items.moduleType == "moduleComboLongTailWord"||items.moduleType == "moduleContact"||$this.formData.moduleType == "moduleComboNews"||$this.formData.moduleType == "moduleDecoration"||$this.formData.moduleType == "moduleFooter"){
                 item.isDisabled = true;
-              }else if(items.selectedModuleType == "moduleImgList"||items.selectedModuleType == "moduleFontList"||items.selectedModuleType == "moduleComboList"){
+              }else if(items.moduleType == "moduleImgList"||items.moduleType == "moduleFontList"||items.moduleType == "moduleComboList"){
                 if(item.type=="about"||item.type=="contact"){
                     item.isDisabled = true;
                 }
-              }else if(items.selectedModuleType == "moduleProfile"||items.selectedModuleType == "moduleCulture"||items.selectedModuleType == "moduleService"||items.selectedModuleType == "modulePower"||items.selectedModuleType == "modulePartner"){
+              }else if(items.moduleType == "moduleProfile"||items.moduleType == "moduleCulture"||items.moduleType == "moduleService"||items.moduleType == "modulePower"||items.moduleType == "modulePartner"){
                 if(item.type!="index"){
                     item.isDisabled = true;
                 }
@@ -360,6 +394,11 @@ export default {
           var $this = this;
           console.log($this.searchData.selectedModuleType);
         },
+        // 搜索页面类型选择改变触发事件
+        changeSelectedPageType:function(){
+          var $this = this;
+          console.log($this.searchData.selectedPageType);
+        },
         // 搜索有效宽度选择改变触发事件
         changeSelectedMaxWidth:function(){
           var $this = this;
@@ -368,7 +407,7 @@ export default {
         // 搜索添加人选择改变触发事件
         changeSelectedAuthor:function(){
           var $this = this;
-          console.log($this.searchData.selectedAuthor);
+          console.log($this.searchData.selectedAuthors);
         },
         // 隐藏/显示搜索条件
         toggleSearchPanel:function(){
@@ -381,50 +420,74 @@ export default {
           var $this = this;
           $this.searchData.isSearchAbsolute = true;
           $this.searchData.searchHeight = $this.$refs.search.offsetHeight;
-          if($this.searchData.selectedModuleType==""&&$this.searchData.selectedMaxWidth==""&&$this.searchData.selectedAuthor==""&&$this.searchData.moduleGUID==""){
+          if($this.searchData.selectedModuleType.length==0&&$this.searchData.selectedPageType.length==0&&$this.searchData.selectedMaxWidth.length==0&&$this.searchData.selectedAuthors.length==0&&$this.searchData.moduleGUID==""){
             $this.$alert('请至少选择一个搜索条件', '警告', {
                 confirmButtonText: '确定',
             });
             return false;
           }
-          var serviceModuleData = [
-              {id:0,moduleType:'moduleHeader',pageType:'index,about,list,article,contact,longTailWord',headerFixed:'0',coverContact:'',maxWidth:'1440',parentModuleGUID:'',usedClasses:'wrapper,product-info',moduleGUID:"wjk-0001",htmlCode:'<div class="wrapper wjk-0001"><p class="product-info"></p>我是一个模块</div>',cssCode:'.wrapper{width:100%;overflow:hidden;}.wrapper .product-info{display:none;}.wjk-0001{width:100%;height:300px;background:red;color:#fff;font-size:32px;text-align:center;line-height:300px;}',author:'王军凯',createdDate:'2019-11-26'},
-              {id:1,moduleType:'moduleHeader',pageType:'index,about,list,article,contact,longTailWord',headerFixed:'1',coverContact:'',maxWidth:'1280',parentModuleGUID:'',usedClasses:'wrap,product-data',moduleGUID:"wjk-0002",htmlCode:'<div class="wrap wjk-0002"><p class="product-data"></p>我是一个模块</div>',cssCode:'.wrap{width:100%;overflow:hidden;}.wrap .product-data{display:none;}.wjk-0002{width:100%;height:300px;background:green;color:#fff;font-size:32px;text-align:center;line-height:300px;}',author:'王军凯',createdDate:'2019-11-26'},
-              {id:2,moduleType:'moduleHeader',pageType:'index,about,list,article,contact,longTailWord',headerFixed:'0',coverContact:'',maxWidth:'1440',parentModuleGUID:'',usedClasses:'wrapper,product-img',moduleGUID:"wjk-0003",htmlCode:'<div class="wrapper wjk-0003"><p class="product-img"></p>我是一个模块</div>',cssCode:'.wrapper{width:100%;overflow:hidden;}.wrapper .product-img{display:none;}.wjk-0003{width:100%;height:300px;background:blue;color:#fff;font-size:32px;text-align:center;line-height:300px;}',author:'王军凯',createdDate:'2019-11-26'},
-              {id:3,moduleType:'moduleHeader',pageType:'index,about,list,article,contact,longTailWord',headerFixed:'1',coverContact:'',maxWidth:'1280',parentModuleGUID:'',usedClasses:'wrap,product-font',moduleGUID:"wjk-0004",htmlCode:'<div class="wrap wjk-0004"><p class="product-font"></p>我是一个模块</div>',cssCode:'.wrap{width:100%;overflow:hidden;}.wrap .product-font{display:none;}.wjk-0004{width:100%;height:300px;background:black;color:#fff;font-size:32px;text-align:center;line-height:300px;}',author:'王军凯',createdDate:'2019-11-26'},
-              {id:4,moduleType:'moduleHeader',pageType:'index,about,list,article,contact,longTailWord',headerFixed:'0',coverContact:'',maxWidth:'960',parentModuleGUID:'',usedClasses:'wrapper,product-link',moduleGUID:"wjk-0005",htmlCode:'<div class="wrapper wjk-0005"><p class="product-link"></p>我是一个模块</div>',cssCode:'.wrapper{width:100%;overflow:hidden;}.wrapper .product-link{display:none;}.wjk-0005{width:100%;height:300px;background:pink;color:#fff;font-size:32px;text-align:center;line-height:300px;}',author:'王军凯',createdDate:'2019-11-26'}
-          ];
-          // 处理数据，将所有html代码和样式代码中的类名替换为随机生成的相同位数的字符串
-          serviceModuleData.forEach(function(item,index){
-            var classArr = item.usedClasses.split(",");
-            var guidLen = item.moduleGUID.length;
-            var newGuidClass = $this.randomString(false,guidLen);
-            var guidHtmlZZ = item.moduleGUID;
-            var guidCssZZ = "." + item.moduleGUID;
-            var copyHtmlCode = item.htmlCode;
-            var copyCssCode = item.cssCode;
-            copyHtmlCode = copyHtmlCode.replace(eval("/"+guidHtmlZZ+"/g"),newGuidClass);
-            copyCssCode = copyCssCode.replace(eval("/"+guidCssZZ+"/g"),"."+newGuidClass);
-            classArr.forEach(function(item1,index1){
-              var len = item1.length;
-              var newClass = $this.randomString(false,len);
-              var classHtmlZZ = '="' + item1;
-              var classStyleZZ = '.' + item1;
-              copyHtmlCode = copyHtmlCode.replace(eval("/"+classHtmlZZ+"/g"),'="' + newClass);
-              copyCssCode = copyCssCode.replace(eval("/"+classStyleZZ+"/g"),'.' + newClass);
+          var serviceModuleData = [];
+          $this.searchParams.author = [];
+          if($this.searchData.selectedAuthors.length>0){
+            $this.searchData.selectedAuthors.forEach(function(items,indexs){
+              $this.searchData.authors.forEach(function(item,index){
+                if(item.key == items){
+                  $this.searchParams.author.push(item.name);
+                }
+              });
             });
-            item.copyHtmlCode = copyHtmlCode;
-            item.copyCssCode = copyCssCode;
-            item.showCode = "<style>" + item.cssCode + "</style>" + item.htmlCode;
-          });
-          $this.moduleData = serviceModuleData;
-          if($this.moduleData.length>0){
-            $this.searchData.isModuleShow = true;
-            $this.searchData.isModuleEmpty = false;
-          }else{
-            $this.searchData.isModuleShow = false;
-            $this.searchData.isModuleEmpty = true;
           }
+          $this.searchParams.moduleType = $this.searchData.selectedModuleType.length==0?'':$this.searchData.selectedModuleType.join(',');
+          $this.searchParams.pageType = $this.searchData.selectedPageType.length==0?'':$this.searchData.selectedPageType.join(',');
+          $this.searchParams.maxWidth = $this.searchData.selectedMaxWidth.length==0?'':$this.searchData.selectedMaxWidth.join(',');
+          $this.searchParams.author = $this.searchParams.author.length==0?'':$this.searchParams.author.join(',');
+          $this.searchParams.moduleGUID = $this.searchData.moduleGUID;
+          
+          $this.$api.post('/api/Modules/Get',$this.searchParams,function(res){
+            if(res.data.code ==1){
+              serviceModuleData = res.data.data;
+              // 处理数据，将所有html代码和样式代码中的类名替换为随机生成的相同位数的字符串
+              serviceModuleData.forEach(function(item,index){
+                var classArr = item.usedClasses.split(",");
+                var guidLen = item.moduleGUID.length;
+                var newGuidClass = $this.randomString(false,guidLen);
+                var guidHtmlZZ = item.moduleGUID;
+                var guidCssZZ = "." + item.moduleGUID;
+                var copyHtmlCode = item.htmlCode;
+                var copyCssCode = item.cssCode;
+                copyHtmlCode = copyHtmlCode.replace(eval("/"+guidHtmlZZ+"/g"),newGuidClass);
+                copyCssCode = copyCssCode.replace(eval("/"+guidCssZZ+"/g"),"."+newGuidClass);
+                classArr.forEach(function(item1,index1){
+                  var len = item1.length;
+                  var newClass = $this.randomString(false,len);
+                  var classHtmlZZ = '="' + item1;
+                  var classStyleZZ = '.' + item1;
+                  copyHtmlCode = copyHtmlCode.replace(eval("/"+classHtmlZZ+"/g"),'="' + newClass);
+                  copyCssCode = copyCssCode.replace(eval("/"+classStyleZZ+"/g"),'.' + newClass);
+                });
+                item.copyHtmlCode = copyHtmlCode;
+                item.copyCssCode = copyCssCode;
+                item.showCode = "<style>" + item.cssCode + "</style>" + item.htmlCode;
+                if(item.headerFixed == null){item.headerFixed = ''}
+                if(item.coverContact == null){item.coverContact = ''}
+                if(item.parentModuleGUID == null){item.parentModuleGUID = ''}
+                item.createdDate = $this.formateDate(item.createdDate);
+              });
+              $this.moduleData = serviceModuleData;
+              if($this.moduleData.length>0){
+                $this.searchData.isModuleShow = true;
+                $this.searchData.isModuleEmpty = false;
+              }else{
+                $this.searchData.isModuleShow = false;
+                $this.searchData.isModuleEmpty = true;
+              }
+            }else{
+              $this.$alert(res.data.msg, '警告', {
+                confirmButtonText: '确定',
+            });
+            }
+          });
+          
         },
         // 替换类名字符串
         // 随机生成任意长度字母数字特殊符号组合的字符串
@@ -451,16 +514,21 @@ export default {
           return str;
         },
         // 删除模块
-        deleteModel:function(item){
+        deleteModel:function(items){
           var $this = this;
           $this.$confirm('此操作将永久删除该模块, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            $this.$message({
-              type: 'success',
-              message: '删除成功!'
+            $this.$api.post('/api/Modules/Delete?ID='+items.ID,null,function(res){
+              if(res.data.code==1){
+                $this.getSearchResult();
+                $this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+              }
             });
           }).catch(() => {
             $this.$message({
@@ -748,22 +816,52 @@ export default {
                 });
                 return false;
             }
+            $this.saveData.author = "";
+            $this.formData.authorData.forEach(function(item,index){
+              if(item.type == $this.formData.selectedAuthor){
+                $this.saveData.author = item.name;
+              }
+            });
             $this.saveData.moduleType = $this.formData.selectedModuleType;
             $this.saveData.pageType = pageTypeArr.join(",");
             $this.saveData.headerFixed = $this.formData.headerFixed;
             $this.saveData.coverContact = $this.formData.coverContact;
             $this.saveData.maxWidth = $this.formData.selectedMaxWidth;
-            $this.saveData.author = $this.formData.selectedAuthor;
             $this.saveData.parentModuleGUID = $this.formData.parentModuleGUID;
             $this.saveData.usedClasses = $this.formData.usedClasses;
             $this.saveData.moduleGUID = $this.formData.moduleGUID;
             $this.saveData.htmlCode = $this.formData.htmlCode;
             $this.saveData.cssCode = $this.formData.cssCode;
             console.log($this.saveData);
-            setTimeout(() => {
-                $this.isEdit = false;
-                $this.resetForm();
-            }, 1000);
+            if($this.isAdd){
+              $this.$api.post('/api/Modules/Insert',$this.saveData,function(res){
+                if(res.data.code ==1){
+                  $this.$alert('添加成功', '提示', {
+                      confirmButtonText: '确定',
+                  });
+                  $this.resetForm();
+                }else{
+                  $this.$alert(res.data.msg, '警告', {
+                      confirmButtonText: '确定',
+                  });
+                }
+              });
+            }else{
+              $this.saveData.ID = $this.editID;
+              $this.$api.post('/api/Modules/Update',$this.saveData,function(res){
+                if(res.data.code ==1){
+                  $this.$alert('编辑成功', '提示', {
+                      confirmButtonText: '确定',
+                  });
+                  $this.moduleDialog.isModuleDialog = false;
+                  $this.resetForm();
+                }else{
+                  $this.$alert(res.data.msg, '警告', {
+                      confirmButtonText: '确定',
+                  });
+                }
+              });
+            }
         },
         // 重置表单
         resetForm:function(){
@@ -792,14 +890,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.module-panel{
+.ltw-module-panel{
     width: 100%;
     height: 100%;
     background: #fff;
     overflow: hidden;
     position: relative;
     padding-top: 53px;
-    .item-header{
+    .ltw-item-header{
         width: 100%;
         position: absolute;
         left:0;
@@ -829,16 +927,16 @@ export default {
             }
         }
     }
-    .abs-search.abs{
+    .ltw-abs-search.abs{
       position: absolute;
       left:0;
       z-index: 10;
     }
-    .abs-search{
+    .ltw-abs-search{
       width: 100%;
       @extend %clearfix;
       // left:0;
-      .menu-panel{
+      .ltw-menu-panel{
         width: 48px;
         height: 40px;
         border-radius: 0 0 4px 4px;
@@ -856,36 +954,36 @@ export default {
         line-height: 40px;
         cursor: pointer;
       }
-      .search-wrap{
+      .ltw-search-wrap{
         width: 100%;
         overflow: hidden;
       }
     }
-    .search-panel{
+    .ltw-search-panel{
       width:100%;
       padding: 20px 80px;
       overflow: hidden;
       background: #fff;
       border-bottom: 1px solid #ddd;
-      .item-search{
+      .ltw-item-search{
         float:left;
         padding: 0 5px;
         .el-select{
           display: block;
         }
       }
-      .module-select{
+      .ltw-module-select{
         width: 100%;
         margin-bottom: 10px;
       }
-      .width-select,.author-select{
+      .ltw-width-select,.ltw-author-select{
         width: 36%;
       }
-      .guid-panel{
+      .ltw-guid-panel{
         width: calc(28% - 80px);
       }
     }
-    .item-content{
+    .ltw-item-content{
       transition: .2s top linear;
       width: 100%;
       height: 100%;
@@ -893,15 +991,15 @@ export default {
       overflow-y: auto;
     }
 }
-.module-list{
+.ltw-module-list{
   width: 100%;
   overflow: hidden;
   padding: 50px 0 20px;
-  .item-module{
+  .ltw-item-module{
     box-shadow: 0 0 10px rgba(0,0,0,.1);
     @extend %clearfix;
     margin-bottom: 40px;
-    .module-header{
+    .ltw-module-header{
       width: 100%;
       padding: 10px 20px;
       overflow: hidden;
@@ -916,12 +1014,12 @@ export default {
         float:right;
       }
     }
-    .module-body{
+    .ltw-module-body{
       @extend %clearfix;
       padding: 40px 0;
       width:100%;
     }
-    .module-footer{
+    .ltw-module-footer{
       width: 100%;
       @extend %clearfix;
       padding: 10px 20px;
@@ -932,7 +1030,7 @@ export default {
         font-size: 14px;
         line-height: 32px;
       }
-      .edit-button{
+      .ltw-edit-button{
         float:right;
         text-align: right;
         span{
@@ -951,16 +1049,16 @@ export default {
             opacity: .8;
           }
         }
-        span.copy-code{
+        span.ltw-copy-code{
           border: 1px solid $primary;
           background: $primary;
           color: #fff;
         }
-        span.btn-edit{
+        span.ltw-btn-edit{
           border: 1px solid $primary;
           color: $primary;
         }
-        span.btn-delete{
+        span.ltw-btn-delete{
           background: #f5f5f5;
           color: #999;
         }
@@ -968,10 +1066,10 @@ export default {
     }
   }
 }
-.module-panel{
-  .abs-dialog{
+.ltw-module-panel{
+  .ltw-abs-dialog{
     position: absolute;
-    .dialog-panel{
+    .ltw-dialog-panel{
       left: 60px;
       top: 60px;
       right:60px;
@@ -981,7 +1079,7 @@ export default {
     }
   }
 }
-.empty-panel{
+.ltw-empty-panel{
   width: 100%;
   height: 100%;
   display: table;
@@ -1011,17 +1109,17 @@ export default {
     }
   }
 }
-.abs-dialog.hide{
+.ltw-abs-dialog.hide{
   opacity: 0;
   -webkit-transform: scale(0);
   transform: scale(0);
 }
-.abs-dialog.show{
+.ltw-abs-dialog.show{
   opacity: 1;
   -webkit-transform: scale(1);
   transform: scale(1);
 }
-.abs-dialog{
+.ltw-abs-dialog{
   left:0;
   top:0;
   right:0;
@@ -1041,7 +1139,7 @@ export default {
     left:0;
     top:0;
   }
-  .dialog-panel{
+  .ltw-dialog-panel{
     position: absolute;
     background: #fff;
     z-index: 1;
@@ -1050,7 +1148,7 @@ export default {
     right:0;
     bottom: 0;
     overflow: hidden;
-    .dialog-header{
+    .ltw-dialog-header{
       position: absolute;
       left:0;
       top:0;
@@ -1078,12 +1176,12 @@ export default {
         cursor: pointer;
       }
     }
-    .dialog-body{
+    .ltw-dialog-body{
       width: 100%;
       height: 100%;
       overflow-y: auto;
     }
-    .dialog-footer{
+    .ltw-dialog-footer{
       padding: 20px;
       border-top: 1px solid #e6e6e6;
       overflow: hidden;
@@ -1096,16 +1194,16 @@ export default {
   }
 }
 
-.form-panel{
+.ltw-form-panel{
     width: 100%;
     padding: 0 40px 30px;
     @extend %clearfix;
-    .item-form{
+    .ltw-item-form{
         width: 100%;
         @extend %clearfix;
         position: relative;
         margin-top: 20px;
-        .item-title{
+        .ltw-item-title{
             width:100%;
             height: 32px;
             line-height: 32px;
@@ -1120,7 +1218,7 @@ export default {
                 }
             }
         }
-        .item-body{
+        .ltw-item-body{
             width: 100%;
             @extend %clearfix;
             font-size:0;
@@ -1128,14 +1226,14 @@ export default {
                 margin:0 10px 10px 0;
             }
         }
-        .item-des{
+        .ltw-item-des{
             width: 100%;
             min-height: 24px;
             font-size: 14px;
             color: #999;
         }
     }
-    .item-button{
+    .ltw-item-button{
         margin-top: 20px;
     }
 }

@@ -7,10 +7,12 @@ import '@/styles/index.scss'; // global css
 import 'animate.css';
 import store from './store';
 import App from './App.vue';
+import api from './api/index.js';
 Vue.prototype.$ELEMENT = { size: 'mini', zIndex: 3000 };
 Vue.use(ElementUI);
 Vue.use(VueClipboard);
 Vue.config.productionTip = false;
+Vue.prototype.$api = api;
 
 // router.beforeEach(async(to, from, next) => {
 
