@@ -28,6 +28,11 @@ const routes = [
                 component: () => import('@/views/website'),
                 name: 'websitePage',
             },
+            {
+                path: 'usedWebsitePage',
+                component: () => import('@/views/usedWebsite'),
+                name: 'usedWebsitePage',
+            },
         ]
     },
 ];

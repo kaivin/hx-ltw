@@ -8,6 +8,7 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const notifier = require('node-notifier');
 const { VueLoaderPlugin } = require('vue-loader');
 const postcss = require('./postcss.config');
+var config = require('./src/config');
 
 // 版本号
 const appVersion = new Date().getTime()
@@ -30,18 +31,18 @@ module.exports={
     // 加载器 loader 配置项
     module:{
         rules:[
-            {
-                test: require.resolve('jquery'),
-                use: [
-                    {
-                    loader: 'expose-loader',
-                    options: 'jQuery'
-                },
-                {
-                    loader: 'expose-loader',
-                    options: '$'
-                }]
-            },
+            // {
+            //     test: require.resolve('jquery'),
+            //     use: [
+            //         {
+            //         loader: 'expose-loader',
+            //         options: 'jQuery'
+            //     },
+            //     {
+            //         loader: 'expose-loader',
+            //         options: '$'
+            //     }]
+            // },
             {
                 test: /\.vue$/,
                 use:[
@@ -281,21 +282,13 @@ module.exports={
     // },
     // 开发服务配置项
     devServer: {
-        port: 2070,
+        port: config.dev.port,
         contentBase: path.resolve(__dirname, 'dist'),
         host: ip,
         overlay:true,
         hot:true,
         inline:true,
-        proxy:{
-            '/api':{// 这里会替代我们在 target 里的写的后端的请求接口
-                target:'http://172.16.10.121:8343',// 后端请求的域名或ip：端口号部分
-                changeOrigin: true, // 是否允许跨域
-                pathRewrite:{
-                    '^/api':'', // 重写
-                }
-            }
-        },
+        proxy:config.dev.proxyTable,
         after() {
             open(`http://${ip}:${this.port}`)
             .then(() => {

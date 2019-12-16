@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <div class="result-panel">
+        <div class="result-panel" v-loading="loading">
             <div class="list-data" v-if="searchData.caseListData.moduleData[0].settingData.isRandom=='0'&&searchData.caseListData.moduleData[0].settingData.listData.length>0">
                 <span v-for="(item,index) in searchData.caseListData.moduleData[0].settingData.listData" v-bind:key="index" v-bind:class="item.isSelected?'active':''" v-on:click="selectedData(item)">{{item.moduleGUID}}</span>
             </div>
@@ -49,6 +49,7 @@ export default {
     data(){
       return{
         isSearch:false,
+        loading:false,
       }
     },
     props:{
@@ -84,11 +85,12 @@ export default {
           return false;
         }
         var searchParams = {};
-        searchParams.moduleType = value;
+        searchParams.moduleType = $this.searchData.caseListData.moduleData[0].selectedModuleType.join(',');
         searchParams.pageType = '';
         searchParams.maxWidth = $this.searchData.selectedMaxWidth.length==0?'':$this.searchData.selectedMaxWidth.join(',');
         searchParams.author = '';
         searchParams.moduleGUID = $this.searchData.publicModuleData.moduleData[0].settingData.moduleGUID;
+        $this.loading = true;
         var serviceModuleData = [];
         $this.$api.post('/api/Modules/Get',searchParams,function(res){
           if(res.data.code ==1){
@@ -110,6 +112,7 @@ export default {
             }
             $this.searchData.caseListData.moduleData[0].settingData.listData = serviceModuleData;
             $this.$emit("moduleChanged",$this.searchData);
+            $this.loading = false;
           }else{
               $this.$alert(res.data.msg, '警告', {
                 confirmButtonText: '确定',

@@ -1,7 +1,8 @@
 import axios from 'axios';
+var config = require('../config');
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
-axios.defaults.baseURL = '/api';
-//axios.defaults.baseURL = 'http://172.16.10.121:8343';
+var env = process.env.NODE_ENV;
+axios.defaults.baseURL = env=="development"?config.dev.env.BASE_API: config.build.env.BASE_API;
 
 //import qs from 'qs';// 将url中的参数转为对象、将对象转为url参数形式
 

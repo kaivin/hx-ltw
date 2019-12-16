@@ -49,7 +49,7 @@
             </div>
             <span class="ltw-menu-panel iconfont" v-if="searchData.isSearchAbsolute" v-bind:class="searchData.isSearchShow?'icon-up':'icon-down'" v-on:click="toggleSearchPanel"></span>
           </div>
-          <div class="ltw-item-content" v-bind:class="searchData.isSearchShow?'show':'hide'">
+          <div class="ltw-item-content" v-bind:class="searchData.isSearchShow?'show':'hide'" v-loading="loading">
             <div class="ltw-module-list" v-if="searchData.isModuleShow">
               <div class="ltw-item-module" v-for="(item,index) in moduleData" v-bind:key="index">
                 <div class="ltw-module-header"><span>模块标识：{{item.moduleGUID}}</span><span>添加时间：{{item.createdDate}}</span></div>
@@ -156,6 +156,7 @@ export default {
     name: 'modulePage',
     data: function(){
         return {
+            loading: false,
             isAdd:false,
             editID:0,
             moduleDialog:{
@@ -332,7 +333,7 @@ export default {
             $this.isAdd = true;
           }else{
             $this.isAdd = false;
-            $this.moduleDialog.isDisabled = true;
+            $this.moduleDialog.isDisabled = false;
             $this.moduleDialog.moduleDialogTitle = "编辑模块";
             $this.formData.selectedModuleType = items.moduleType;
             $this.editID = items.ID;
@@ -418,6 +419,7 @@ export default {
         // 获取搜索结果
         getSearchResult:function(){
           var $this = this;
+          $this.loading = true;
           $this.searchData.isSearchAbsolute = true;
           $this.searchData.searchHeight = $this.$refs.search.offsetHeight;
           if($this.searchData.selectedModuleType.length==0&&$this.searchData.selectedPageType.length==0&&$this.searchData.selectedMaxWidth.length==0&&$this.searchData.selectedAuthors.length==0&&$this.searchData.moduleGUID==""){
@@ -451,22 +453,24 @@ export default {
                 var classArr = item.usedClasses.split(",");
                 var guidLen = item.moduleGUID.length;
                 var newGuidClass = $this.randomString(false,guidLen);
-                var guidHtmlZZ = item.moduleGUID;
-                var guidCssZZ = "." + item.moduleGUID;
+                var guidZZ = item.moduleGUID;
                 var copyHtmlCode = item.htmlCode;
                 var copyCssCode = item.cssCode;
-                copyHtmlCode = copyHtmlCode.replace(eval("/"+guidHtmlZZ+"/g"),newGuidClass);
-                copyCssCode = copyCssCode.replace(eval("/"+guidCssZZ+"/g"),"."+newGuidClass);
+                copyHtmlCode = copyHtmlCode.replace(eval("/"+guidZZ+"/g"),newGuidClass);
+                copyCssCode = copyCssCode.replace(eval("/"+guidZZ+"/g"),"."+newGuidClass);
                 classArr.forEach(function(item1,index1){
                   var len = item1.length;
                   var newClass = $this.randomString(false,len);
-                  var classHtmlZZ = '="' + item1;
-                  var classStyleZZ = '.' + item1;
-                  copyHtmlCode = copyHtmlCode.replace(eval("/"+classHtmlZZ+"/g"),'="' + newClass);
-                  copyCssCode = copyCssCode.replace(eval("/"+classStyleZZ+"/g"),'.' + newClass);
+                  var classZZ = item1;
+                  copyHtmlCode = copyHtmlCode.replace(eval("/"+classZZ+"/g"),'="' + newClass);
+                  copyCssCode = copyCssCode.replace(eval("/"+classZZ+"/g"),'.' + newClass);
                 });
                 item.copyHtmlCode = copyHtmlCode;
                 item.copyCssCode = copyCssCode;
+                var fixedZZ = "fixed";
+                var imgZZ = "../images"
+                item.cssCode = item.cssCode.replace(eval("/"+fixedZZ+"/g"),"relative");
+                //var cssCodes = cssCode.replace(eval("/"+imgZZ+"/g"),"images");
                 item.showCode = "<style>" + item.cssCode + "</style>" + item.htmlCode;
                 if(item.headerFixed == null){item.headerFixed = ''}
                 if(item.coverContact == null){item.coverContact = ''}
@@ -474,6 +478,8 @@ export default {
                 item.createdDate = $this.formateDate(item.createdDate);
               });
               $this.moduleData = serviceModuleData;
+              $this.loading = false;
+              console.log(serviceModuleData);
               if($this.moduleData.length>0){
                 $this.searchData.isModuleShow = true;
                 $this.searchData.isModuleEmpty = false;
@@ -840,6 +846,7 @@ export default {
                       confirmButtonText: '确定',
                   });
                   $this.resetForm();
+                  $this.getSearchResult();
                 }else{
                   $this.$alert(res.data.msg, '警告', {
                       confirmButtonText: '确定',
@@ -855,6 +862,7 @@ export default {
                   });
                   $this.moduleDialog.isModuleDialog = false;
                   $this.resetForm();
+                  $this.getSearchResult();
                 }else{
                   $this.$alert(res.data.msg, '警告', {
                       confirmButtonText: '确定',
@@ -1018,6 +1026,7 @@ export default {
       @extend %clearfix;
       padding: 40px 0;
       width:100%;
+      background: url(../../assets/images/bg_mark.jpg) left top repeat;
     }
     .ltw-module-footer{
       width: 100%;

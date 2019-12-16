@@ -30,18 +30,25 @@ export default {
                 isActive:false,
                 linkUrl:'/websitePage'
             },
+            {
+                pageType:'usedWebsite',
+                name:'已使用站点',
+                icon:'icon-lock',
+                isActive:false,
+                linkUrl:'/usedWebsitePage'
+            },
         ]
         }
     },
     watch:{
         // 监听状态管理中导航的cookie值变化，如果导航是在默认首页，则执行里面的事件
         isDefaultActive:function(val,oldVal){
-        var $this = this;
-        if(val){
-            $this.navList.forEach(function(item,index){
-            item.isActive = false;
-            });
-        }
+            var $this = this;
+            if(val){
+                $this.navList.forEach(function(item,index){
+                item.isActive = false;
+                });
+            }
         }
     },
     mounted() {
@@ -78,8 +85,6 @@ export default {
         goPage:function(value,type){
             var $this = this;
             var router = $this.$router;
-            $this.$store.dispatch('header/changeActive','');
-            $this.$store.dispatch('header/changePageType',type);
             $this.navList.forEach(function(item,index){
                 if(!item.isActive){
                 if(item.pageType == type){
@@ -94,6 +99,8 @@ export default {
                 }
                 }
             });
+            $this.$store.dispatch('header/changeActive','');
+            $this.$store.dispatch('header/changePageType',type);
         }
     },
 }
@@ -115,10 +122,19 @@ export default {
             color: #fff;
             padding:0 20px;
             cursor: pointer;
+            background: darken(#252a2f, 6%);
+            transition: background .5s ease-in-out;
+            &:hover{
+                background: darken(#252a2f,2%);
+            }
             a{
+                display: block;
                 line-height: 64px;
                 font-size: 16px;
                 color: #fff;
+                &:hover{
+                    text-decoration: none;
+                }
             }
         }
     }
