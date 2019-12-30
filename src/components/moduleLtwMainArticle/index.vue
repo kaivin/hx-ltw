@@ -5,7 +5,7 @@
                 <div class="item-body">
                 <div class="inline-body">
                     <div class="inline-font">模块选择</div>
-                    <div class="inline-content num-input"><el-input v-model="searchData.publicModuleData.moduleData[3].settingData.randomQty" placeholder=""></el-input></div>
+                    <div class="inline-content num-input"><el-input v-model="searchData.longTailWordData.moduleData[1].settingData.randomQty" placeholder=""></el-input></div>
                     <div class="inline-font">条数据</div>
                 </div>
                 </div>
@@ -13,30 +13,30 @@
             <div class="item-search">
                 <h2>随机数据</h2>
                 <div class="item-body">
-                <el-radio v-for="(item,index) in searchData.publicModuleData.moduleData[3].settingData.randomData" v-bind:key="index" v-on:change="changeRandomState" v-model="searchData.publicModuleData.moduleData[3].settingData.isRandom" v-bind:label="item.type" border>{{item.name}}</el-radio>
+                <el-radio v-for="(item,index) in searchData.longTailWordData.moduleData[1].settingData.randomData" v-bind:key="index" v-on:change="changeRandomState" v-model="searchData.longTailWordData.moduleData[1].settingData.isRandom" v-bind:label="item.type" border>{{item.name}}</el-radio>
                 </div>
             </div>
-            <div class="item-search" v-if="searchData.publicModuleData.moduleData[3].settingData.isRandom=='0'">
+            <div class="item-search" v-if="searchData.longTailWordData.moduleData[1].settingData.isRandom=='0'">
                 <h2>模块唯一标识类名</h2>
                 <div class="item-body">
                 <div class="inline-body">
-                    <div class="inline-content"><el-input v-model="searchData.publicModuleData.moduleData[3].settingData.moduleGUID" placeholder="模块的唯一标识类名"></el-input></div>
+                    <div class="inline-content"><el-input v-model="searchData.longTailWordData.moduleData[1].settingData.moduleGUID" placeholder="模块的唯一标识类名"></el-input></div>
                     <div class="inline-content left-font"><el-button type="primary" v-on:click="getModuleData(moduleType)">搜索</el-button></div>
                 </div>
                 </div>
             </div>
-            <div class="item-search" v-if="searchData.publicModuleData.moduleData[3].settingData.isRandom=='0'&&searchData.publicModuleData.moduleData[3].settingData.selectedData.length>0">
+            <div class="item-search" v-if="searchData.longTailWordData.moduleData[1].settingData.isRandom=='0'&&searchData.longTailWordData.moduleData[1].settingData.selectedData.length>0">
                 <h2>已选择</h2>
                 <div class="item-body">
                 <div class="selected-list">
-                    <span v-for="(item,index) in searchData.publicModuleData.moduleData[3].settingData.selectedData" v-bind:key="index" v-on:click="deleteSelectedModule(item,index)">{{item.moduleGUID}}</span>
+                    <span v-for="(item,index) in searchData.longTailWordData.moduleData[1].settingData.selectedData" v-bind:key="index" v-on:click="deleteSelectedModule(item,index)">{{item.moduleGUID}}</span>
                 </div>
                 </div>
             </div>
         </div>
         <div class="result-panel" v-loading="loading">
-            <div class="list-data" v-if="searchData.publicModuleData.moduleData[3].settingData.isRandom=='0'&&searchData.publicModuleData.moduleData[3].settingData.listData.length>0">
-                <span v-for="(item,index) in searchData.publicModuleData.moduleData[3].settingData.listData" v-bind:key="index" v-bind:class="item.isSelected?'active':''" v-on:click="selectedData(item)">{{item.moduleGUID}}</span>
+            <div class="list-data" v-if="searchData.longTailWordData.moduleData[1].settingData.isRandom=='0'&&searchData.longTailWordData.moduleData[1].settingData.listData.length>0">
+                <span v-for="(item,index) in searchData.longTailWordData.moduleData[1].settingData.listData" v-bind:key="index" v-bind:class="item.isSelected?'active':''" v-on:click="selectedData(item)">{{item.moduleGUID}}</span>
             </div>
             <div class="empty-panel" v-if="isSearch"><p>该模块在所选有效宽度下暂无数据</p></div>
         </div>
@@ -45,7 +45,7 @@
 
 <script>
 export default {
-    name:'modulePublicMessageSearch',
+    name:'productMainArticle',
     data(){
       return{
         isSearch:false,
@@ -70,16 +70,23 @@ export default {
       },
       changeRandomState:function(){
         var $this = this;
-        if($this.searchData.productDetailData.moduleData[3].settingData.isRandom=='1'){
+        if($this.searchData.longTailWordData.moduleData[1].settingData.isRandom=='1'){
           $this.isSearch = false;
         }
       },
       // 获取模块数据
       getModuleData:function(value){
         var $this = this;
+        var len = $this.getMaxWidthLength();
+        if(len<=0){
+          $this.$alert('请先选择有效宽度', '警告', {
+              confirmButtonText: '确定',
+          });
+          return false;
+        }
         var searchParams = {};
-        searchParams.moduleType = $this.searchData.publicModuleData.moduleData[3].selectedModuleType.join(',');
-        searchParams.pageType = 'index,about,list,article,contact,longTailWord';
+        searchParams.moduleType = $this.searchData.longTailWordData.moduleData[1].selectedModuleType.join(',');
+        searchParams.pageType = '';
         searchParams.maxWidth = $this.searchData.selectedMaxWidth.length==0?'':$this.searchData.selectedMaxWidth.join(',');
         searchParams.author = '';
         searchParams.moduleGUID = $this.searchData.publicModuleData.moduleData[0].settingData.moduleGUID;
@@ -91,8 +98,8 @@ export default {
             serviceModuleData.forEach(function(item,index){
               item.isSelected = false;
             });
-            if($this.searchData.publicModuleData.moduleData[3].settingData.selectedData.length>0){
-              $this.searchData.publicModuleData.moduleData[3].settingData.selectedData.forEach(function(item,index){
+            if($this.searchData.longTailWordData.moduleData[1].settingData.selectedData.length>0){
+              $this.searchData.longTailWordData.moduleData[1].settingData.selectedData.forEach(function(item,index){
                 serviceModuleData.forEach(function(items,indexs){
                   if(items.ID == item.ID){
                     items.isSelected = true;
@@ -103,7 +110,7 @@ export default {
             if(serviceModuleData.length==0){
               $this.isSearch = true;
             }
-            $this.searchData.publicModuleData.moduleData[3].settingData.listData = serviceModuleData;
+            $this.searchData.longTailWordData.moduleData[1].settingData.listData = serviceModuleData;
             $this.$emit("moduleChanged",$this.searchData);
             $this.loading = false;
           }else{
@@ -116,26 +123,26 @@ export default {
       // 选择页脚模块数据
       selectedData:function(items){
         var $this = this;
-        var len = $this.searchData.publicModuleData.moduleData[3].settingData.selectedData.length;
-        if($this.searchData.publicModuleData.moduleData[3].settingData.randomQty==''){
+        var len = $this.searchData.longTailWordData.moduleData[1].settingData.selectedData.length;
+        if($this.searchData.longTailWordData.moduleData[1].settingData.randomQty==''){
           $this.$alert('请先设置数据选择最大值', '警告', {
               confirmButtonText: '确定',
           });
           return false;
         }else{
-          var maxLen = parseInt($this.searchData.publicModuleData.moduleData[3].settingData.randomQty);
+          var maxLen = parseInt($this.searchData.longTailWordData.moduleData[1].settingData.randomQty);
           if(len>=maxLen){
-            $this.$alert('已设置最多选择'+$this.searchData.publicModuleData.moduleData[3].settingData.randomQty+'条数据', '警告', {
+            $this.$alert('已设置最多选择'+$this.searchData.longTailWordData.moduleData[1].settingData.randomQty+'条数据', '警告', {
                 confirmButtonText: '确定',
             });
             return false;
           }
         }
         if(!items.isSelected){
-          $this.searchData.publicModuleData.moduleData[3].settingData.listData.forEach(function(item,index){
+          $this.searchData.longTailWordData.moduleData[1].settingData.listData.forEach(function(item,index){
             if(items.ID == item.ID){
               item.isSelected = true;
-              $this.searchData.publicModuleData.moduleData[3].settingData.selectedData.push(item);
+              $this.searchData.longTailWordData.moduleData[1].settingData.selectedData.push(item);
             }
           });
           $this.$emit("moduleChanged",$this.searchData);
@@ -144,8 +151,8 @@ export default {
       // 删除已选页脚模块数据
       deleteSelectedModule:function(items,indexs){
         var $this = this;
-        $this.searchData.publicModuleData.moduleData[3].settingData.selectedData.splice(indexs,1);
-        $this.searchData.publicModuleData.moduleData[3].settingData.listData.forEach(function(item,index){
+        $this.searchData.longTailWordData.moduleData[1].settingData.selectedData.splice(indexs,1);
+        $this.searchData.longTailWordData.moduleData[1].settingData.listData.forEach(function(item,index){
           if(items.ID == item.ID){
             item.isSelected = false;
           }

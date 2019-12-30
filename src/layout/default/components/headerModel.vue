@@ -15,29 +15,29 @@ export default {
     name:"headerModel",
     data:function(){
         return{
-        navList:[
-            {
-                pageType:'module',
-                name:'模块',
-                icon:'icon-module',
-                isActive:false,
-                linkUrl:'/modulePage'
-            },
-            {
-                pageType:'website',
-                name:'站点',
-                icon:'icon-site',
-                isActive:false,
-                linkUrl:'/websitePage'
-            },
-            {
-                pageType:'usedWebsite',
-                name:'已使用站点',
-                icon:'icon-lock',
-                isActive:false,
-                linkUrl:'/usedWebsitePage'
-            },
-        ]
+            navList:[
+                {
+                    pageType:'module',
+                    name:'模块',
+                    icon:'icon-module',
+                    isActive:false,
+                    linkUrl:'/modulePage'
+                },
+                {
+                    pageType:'website',
+                    name:'站点',
+                    icon:'icon-site',
+                    isActive:false,
+                    linkUrl:'/websitePage'
+                },
+                {
+                    pageType:'usedWebsite',
+                    name:'已使用站点',
+                    icon:'icon-lock',
+                    isActive:false,
+                    linkUrl:'/usedWebsitePage'
+                },
+            ]
         }
     },
     watch:{
@@ -46,21 +46,25 @@ export default {
             var $this = this;
             if(val){
                 $this.navList.forEach(function(item,index){
-                item.isActive = false;
+                    item.isActive = false;
                 });
             }
         }
     },
     mounted() {
         window.addEventListener('load', () => { // 滚动事件变为 scroll
-        var $this = this;
-        if($this.pageType!=="default"&&!$this.isDefaultActive){
-            $this.navList.forEach(function(item,index){
-            if(item.pageType == $this.pageType){
-                item.isActive = true;
+            var $this = this;
+            var router = $this.$router;
+            if($this.pageType!=="default"&&!$this.isDefaultActive){
+                $this.navList.forEach(function(item,index){
+                    if(item.pageType == $this.pageType){
+                        item.isActive = true;
+                        router.push({path: item.linkUrl}).catch(err => {err});
+                    }
+                });
+            }else{
+                router.push({path: '/'}).catch(err => {err});
             }
-            });
-        }
         });
     },
     computed:{
@@ -88,7 +92,7 @@ export default {
             $this.navList.forEach(function(item,index){
                 if(!item.isActive){
                 if(item.pageType == type){
-                    router.push({path: value});
+                    router.push({path: value}).catch(err => {err});
                     item.isActive = true;
                 }else{
                     item.isActive = false;

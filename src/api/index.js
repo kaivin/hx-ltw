@@ -1,27 +1,31 @@
 import axios from 'axios';
+import Qs from 'qs';
 var config = require('../config');
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 var env = process.env.NODE_ENV;
 axios.defaults.baseURL = env=="development"?config.dev.env.BASE_API: config.build.env.BASE_API;
-
-//import qs from 'qs';// 将url中的参数转为对象、将对象转为url参数形式
+//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 
 
 let http = axios.create({
     withCredentials: true,
-    timeout: 5000,
+    timeout: 20000,
     headers:{
-        'Content-Type':'application/x-www-form-urlencoded;charset=utf-8',
+        //'Content-Type':'application/x-www-form-urlencoded;charset=utf-8',
         "Access-Control-Allow-Origin":"*"
     },
     transformRequest:[function(data){
-        let newData = '';
-        for (let k in data) {
-            if(data.hasOwnProperty(k) === true){
-                newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
-            }
-        }
+        // let newData = JSON.stringify(data);
+        let newData = Qs.stringify(data);
+        // let newData = '';
+        // for (let k in data) {
+        //     if(data.hasOwnProperty(k) === true){
+        //         newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&';
+        //     }
+        // }
+        // console.log("转化后是："+newData);
+        // console.log("字符串长度："+newData.length);
         return newData;
+        // return data;
     }]
 });
 function apiAxios(method,url,params,response){

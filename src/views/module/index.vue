@@ -86,13 +86,20 @@
                         <div class="ltw-item-body"> 
                             <el-radio v-for="(item,index) in formData.moduleType" v-bind:key="index" v-model="formData.selectedModuleType" v-bind:label="item.type" v-on:change="changeModuleTypeState" v-bind:disabled="moduleDialog.isDisabled" border>{{item.name}}</el-radio>
                         </div>
-                        <div class="ltw-item-des">{{formData.selectedModuleTypeDes}}</div>
+                        <div class="ltw-item-des" v-if="formData.selectedModuleType!=''">{{formData.selectedModuleTypeDes}}</div>
                     </div>
                     <div class="ltw-item-form" v-if="isHeader">
                         <div class="ltw-item-title">侧边固定：</div>
                         <div class="ltw-item-body"> 
                             <el-radio v-for="(item,index) in formData.headerFixedData" v-bind:key="index" v-model="formData.headerFixed" v-bind:label="item.type" v-on:change="changeHeaderFixedState" border>{{item.name}}</el-radio>
                         </div>
+                    </div>
+                    <div class="ltw-item-form" v-if="isCombo">
+                      <div class="ltw-item-title">选择列表类型:<span>可多选，当前模块中有几个列表，就选几个，如果有相同类型的列表，则重复选择即可，选择顺序以在代码中的前后顺序为准</span></div>
+                      <div class="ltw-item-body">
+                        <div class="ltw-list-panel"><span v-for="(item,index) in formData.listType" v-bind:key="index" v-on:click="selectedListType(item)">{{item.name}}</span></div>
+                        <div class="ltw-selected-panel" v-if="formData.selectedListType.length>0"><strong>已选择：</strong><span v-for="(item,index) in formData.selectedListType" v-bind:key="index" v-on:click="deleteListType(index)">{{item.name}}</span></div>
+                      </div>
                     </div>
                     <div class="ltw-item-form" v-if="isContactMessage">
                         <div class="ltw-item-title">是否包含联系方式：</div>
@@ -125,7 +132,7 @@
                         </div>
                     </div>
                     <div class="ltw-item-form">
-                        <div class="ltw-item-title">使用类名：<span>模块中的所有靠近<em>="</em>的类名；例：class="wrapper wjk-0001"，其中wrapper符合规则</span></div>
+                        <div class="ltw-item-title">使用类名：<span>模块中使用的除公共样式和模块唯一标识之外的类名</span></div>
                         <div class="ltw-item-body">
                             <el-input v-model="formData.usedClasses" placeholder="多个类名使用逗号分隔"></el-input>
                         </div>
@@ -224,6 +231,7 @@ export default {
             isHeader: false,
             isContactMessage:false,
             isBanner:false,
+            isCombo: false,
             formData:{
                 selectedModuleType:"",
                 selectedModuleTypeDes:"",
@@ -247,7 +255,7 @@ export default {
                     {type:'modulePartner',name:'国际合作',descript:"隶属于关于我们"},
                     {type:'moduleContact',name:'联系方式',descript:"独立的展示邮箱、地址、商务通链接的模块"},
                     {type:'moduleMessage',name:'留言板',descript:"分带联系方式、不带联系方式两种"},
-                    {type:'moduleDecoration',name:'装饰模块',descript:"可适用所有页面，暂定为以引导用户点击或提交邮箱账号用的单独模块，除该作用相关信息外，无其他主要信息展示的模块"},
+                    {type:'moduleDecoration',name:'装饰模块',descript:"可适用所有页面，暂定为以引导用户点击的单独模块，除该作用相关信息外，无其他主要信息展示的模块"},
                     {type:'moduleFooter',name:'页脚',descript:"页面底部信息，可包含返回顶部、移动端底部商务通"},
                 ],
                 headerFixed:"",
@@ -267,6 +275,13 @@ export default {
                     {type:'article',name:'详情页',isSelected:false,isDisabled:false},
                     {type:'contact',name:'联系我们',isSelected:false,isDisabled:false},
                     {type:'longTailWord',name:'长尾词页',isSelected:false,isDisabled:false},
+                ],
+                selectedListType:[],
+                listType:[
+                  {type:'category',name:'分类列表'},
+                  {type:'product',name:'产品列表'},
+                  {type:'case',name:'案例列表'},
+                  {type:'longTailWord',name:'长尾词列表'},
                 ],
                 selectedMaxWidth:"",
                 maxWidthData:[
@@ -349,8 +364,22 @@ export default {
             if(items.moduleType == "moduleMessage"){
               $this.isContactMessage = true;
             }
+            if(items.listType&&items.listType.length>0){
+              items.listType.forEach(function(item,index){
+                $this.formData.listType.forEach(function(item1,index1){
+                  if(item == item1.type){
+                    $this.selectedListType.push(item1);
+                  }
+                });
+              });
+            }else{
+              $this.selectedListType = [];
+            }
             if(items.moduleType == "moduleBanner"||items.moduleType == "moduleComboHeader"){
               $this.isBanner = true;
+            }
+            if(items.moduleType == "moduleComboList"||items.moduleType == "moduleMainArticle"||items.moduleType == "moduleComboArticle"||items.moduleType == "moduleComboLongTailWord"||items.moduleType == "moduleComboNews"){
+              $this.isCombo = true;
             }
             $this.formData.pageType.forEach(function(item,index){
               var isExist = $this.patch(item.type,items.pageType);
@@ -444,34 +473,35 @@ export default {
           $this.searchParams.maxWidth = $this.searchData.selectedMaxWidth.length==0?'':$this.searchData.selectedMaxWidth.join(',');
           $this.searchParams.author = $this.searchParams.author.length==0?'':$this.searchParams.author.join(',');
           $this.searchParams.moduleGUID = $this.searchData.moduleGUID;
-          
           $this.$api.post('/api/Modules/Get',$this.searchParams,function(res){
             if(res.data.code ==1){
               serviceModuleData = res.data.data;
               // 处理数据，将所有html代码和样式代码中的类名替换为随机生成的相同位数的字符串
               serviceModuleData.forEach(function(item,index){
-                var classArr = item.usedClasses.split(",");
+                var classArr = item.usedClasses.split(",");// 使用的类名
                 var guidLen = item.moduleGUID.length;
-                var newGuidClass = $this.randomString(false,guidLen);
-                var guidZZ = item.moduleGUID;
+                var newGuidClass = $this.randomString(false,guidLen);// 或去一个与唯一标识类名同等长度的随机字符串
+                var guidZZ = item.moduleGUID; 
                 var copyHtmlCode = item.htmlCode;
                 var copyCssCode = item.cssCode;
-                copyHtmlCode = copyHtmlCode.replace(eval("/"+guidZZ+"/g"),newGuidClass);
-                copyCssCode = copyCssCode.replace(eval("/"+guidZZ+"/g"),"."+newGuidClass);
-                classArr.forEach(function(item1,index1){
-                  var len = item1.length;
-                  var newClass = $this.randomString(false,len);
-                  var classZZ = item1;
-                  copyHtmlCode = copyHtmlCode.replace(eval("/"+classZZ+"/g"),'="' + newClass);
-                  copyCssCode = copyCssCode.replace(eval("/"+classZZ+"/g"),'.' + newClass);
-                });
+                copyHtmlCode = copyHtmlCode.replace(eval("/"+guidZZ+"/g"),newGuidClass); // 替换html代码中的唯一标识类名为随机字符串
+                copyCssCode = copyCssCode.replace(eval("/"+guidZZ+"/g"),newGuidClass); // 替换css代码中的唯一标识类名为随机字符串
+                if(classArr.length>0){
+                  classArr.forEach(function(item1,index1){
+                    var len = item1.length;
+                    var newClass = $this.randomString(false,len);
+                    var classZZ = item1;
+                    copyHtmlCode = copyHtmlCode.replace(eval("/"+classZZ+"/g"),'="' + newClass);
+                    copyCssCode = copyCssCode.replace(eval("/"+classZZ+"/g"), newClass);
+                  });
+                }
                 item.copyHtmlCode = copyHtmlCode;
                 item.copyCssCode = copyCssCode;
-                var fixedZZ = "fixed";
+                var fixedZZ = ":fixed";
                 var imgZZ = "../images"
-                item.cssCode = item.cssCode.replace(eval("/"+fixedZZ+"/g"),"relative");
-                //var cssCodes = cssCode.replace(eval("/"+imgZZ+"/g"),"images");
-                item.showCode = "<style>" + item.cssCode + "</style>" + item.htmlCode;
+                var showCssCode = item.cssCode;
+                showCssCode = showCssCode.replace(eval("/"+fixedZZ+"/g"),":relative");
+                item.showCode = "<style>" + showCssCode + "</style>" + item.htmlCode;
                 if(item.headerFixed == null){item.headerFixed = ''}
                 if(item.coverContact == null){item.coverContact = ''}
                 if(item.parentModuleGUID == null){item.parentModuleGUID = ''}
@@ -488,9 +518,10 @@ export default {
                 $this.searchData.isModuleEmpty = true;
               }
             }else{
+              $this.loading = false;
               $this.$alert(res.data.msg, '警告', {
                 confirmButtonText: '确定',
-            });
+              });
             }
           });
           
@@ -686,10 +717,26 @@ export default {
                     item.isDisabled = false;
                 });
             }
+            if($this.formData.selectedModuleType == "moduleComboList"||$this.formData.selectedModuleType == "moduleMainArticle"||$this.formData.selectedModuleType == "moduleComboArticle"||$this.formData.selectedModuleType == "moduleComboLongTailWord"||$this.formData.selectedModuleType == "moduleComboNews"){
+              $this.isCombo = true;
+            }else{
+              $this.isCombo = false;
+            }
+            $this.formData.selectedListType = [];
         },
         // 侧边固定点击事件
         changeHeaderFixedState:function(){
             console.log(this.formData.headerFixedData);
+        },
+        // 选择列表类型
+        selectedListType:function(items){
+          var $this = this;
+          $this.formData.selectedListType.push(items);
+        },
+        // 删除列表类型选择
+        deleteListType:function(index){
+          var $this = this;
+          $this.formData.selectedListType.splice(index,1)
         },
         // 是否包含联系方式点击事件
         changeCoverContactState:function(){
@@ -804,12 +851,6 @@ export default {
                 });
                 return false;
             }
-            if($this.formData.usedClasses==""){
-                $this.$alert('使用类名不能为空', '警告', {
-                    confirmButtonText: '确定',
-                });
-                return false;
-            }
             if($this.formData.htmlCode==""){
                 $this.$alert('html代码不能为空', '警告', {
                     confirmButtonText: '确定',
@@ -828,6 +869,13 @@ export default {
                 $this.saveData.author = item.name;
               }
             });
+            $this.saveData.listType = [];
+            if($this.formData.selectedListType.length>0){
+              $this.formData.selectedListType.forEach(function(item,index){
+                $this.saveData.listType.push(item.name);
+              });
+            }
+            $this.saveData.listType = $this.saveData.listType.length == 0?"":$this.saveData.listType;
             $this.saveData.moduleType = $this.formData.selectedModuleType;
             $this.saveData.pageType = pageTypeArr.join(",");
             $this.saveData.headerFixed = $this.formData.headerFixed;
@@ -846,7 +894,6 @@ export default {
                       confirmButtonText: '确定',
                   });
                   $this.resetForm();
-                  $this.getSearchResult();
                 }else{
                   $this.$alert(res.data.msg, '警告', {
                       confirmButtonText: '确定',
@@ -879,6 +926,7 @@ export default {
             $this.isBanner = false;
             $this.formData.selectedModuleType = "";
             $this.formData.selectedModuleTypeDes = "";
+            $this.formData.selectedListType = [];
             $this.formData.headerFixed = "";
             $this.formData.coverContact = "";
             $this.formData.selectedMaxWidth = "";
@@ -1246,4 +1294,63 @@ export default {
         margin-top: 20px;
     }
 }
+.ltw-list-panel{
+  float:left;
+  overflow: hidden;
+  >span{
+    display: block;
+    float:left;
+    height: 40px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 38px;
+    padding: 0 20px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
+  .ltw-selected-panel{
+    float:left;
+    height: 40px;
+    margin-left: 30px;
+    strong{
+      display: block;
+      float:left;
+      line-height: 40px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+    span{
+      display: block;
+      float:left;
+      margin-right: 10px;
+      height: 40px;
+      line-height: 38px;
+      font-size: 14px;
+      padding: 0 30px 0 10px;
+      border: 1px solid $primary;
+      background: $primary;
+      color: #fff;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+      &:after{
+        font-family: "iconfont" !important;
+        font-size: 16px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        content:"\e940";
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 20px;
+        text-align: center;
+        position: absolute;
+        right: 7px;
+        top: 9px;
+      }
+    }
+  }
 </style>
