@@ -478,7 +478,7 @@ export default {
               serviceModuleData = res.data.data;
               // 处理数据，将所有html代码和样式代码中的类名替换为随机生成的相同位数的字符串
               serviceModuleData.forEach(function(item,index){
-                var classArr = item.usedClasses.split(",");// 使用的类名
+                var classArr = [];
                 var guidLen = item.moduleGUID.length;
                 var newGuidClass = $this.randomString(false,guidLen);// 或去一个与唯一标识类名同等长度的随机字符串
                 var guidZZ = item.moduleGUID; 
@@ -486,7 +486,8 @@ export default {
                 var copyCssCode = item.cssCode;
                 copyHtmlCode = copyHtmlCode.replace(eval("/"+guidZZ+"/g"),newGuidClass); // 替换html代码中的唯一标识类名为随机字符串
                 copyCssCode = copyCssCode.replace(eval("/"+guidZZ+"/g"),newGuidClass); // 替换css代码中的唯一标识类名为随机字符串
-                if(classArr.length>0){
+                if(item.usedClasses!=null&&item.usedClasses!=''){
+                  classArr = item.usedClasses.split(",");
                   classArr.forEach(function(item1,index1){
                     var len = item1.length;
                     var newClass = $this.randomString(false,len);
@@ -494,11 +495,10 @@ export default {
                     copyHtmlCode = copyHtmlCode.replace(eval("/"+classZZ+"/g"),'="' + newClass);
                     copyCssCode = copyCssCode.replace(eval("/"+classZZ+"/g"), newClass);
                   });
-                }
+                }// 使用的类名
                 item.copyHtmlCode = copyHtmlCode;
                 item.copyCssCode = copyCssCode;
                 var fixedZZ = ":fixed";
-                var imgZZ = "../images"
                 var showCssCode = item.cssCode;
                 showCssCode = showCssCode.replace(eval("/"+fixedZZ+"/g"),":relative");
                 item.showCode = "<style>" + showCssCode + "</style>" + item.htmlCode;
