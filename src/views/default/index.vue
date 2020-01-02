@@ -4,13 +4,13 @@
             <div class="sidebar-content">
                  <ul class="menu-panel">
                       <li class="item-menu" v-for="(item,index) in navList" v-bind:class="item.isActive?'is-active':''" v-bind:key="index">
-                        <div class="item-menu-font" v-on:click="goPage(item.pageType)"><i class="iconfont" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
+                        <div class="item-menu-font" v-on:click="goPage(item.tabType)"><i class="iconfont" v-bind:class="item.icon"></i><span class="item-link">{{item.name}}</span></div>
                     </li>
                  </ul>
             </div>
         </div>
         <div class="item-page">
-            <div class="item-content" v-if="pageType=='a'">
+            <div class="item-content" v-if="tabType=='a'">
                 <h3>流程</h3>
                 <p>模块——页面模块——页面——站点</p>
                 <h3>站点</h3>
@@ -22,7 +22,7 @@
                 <h3>模块</h3>
                 <p>本系统中模块和页面模块有所区别，页面模块可以同时指代多种模块，也可以就是一种模块自身，如首页的关于我们页面模块，其所指代的模块可以同时是公司简介、公司文化、公司服务、公司实力，也可以只是其中一个；再比如关于我们页面的公司简介页面模块，其指代的就是公司简介模块本身</p>
             </div>
-            <div class="item-content" v-if="pageType=='b'">
+            <div class="item-content" v-if="tabType=='b'">
                 <p></p>
                 <p><span>01.</span> <strong>唯一标识类名：</strong>这个是由前端在写模块时，给模块定义的一个独属于这个模块的一个类名，用于前端人员自身去大致识别模块</p>
                 <p><span>02.</span> <strong>模块分类：</strong>模块自身有其自己的分类，比如：页头、页脚、留言板之类的，都是模块的分类</p>
@@ -38,7 +38,7 @@
                 <p></p>
                 <p><span>11.</span> <strong>css样式：</strong>该模块的css代码</p>
             </div>
-            <div class="item-content" v-if="pageType=='c'">
+            <div class="item-content" v-if="tabType=='c'">
                 <p></p>
                 <p><span>01</span><strong>页头：</strong>分侧边固定显示、页头显示</p>
                 <p><span>02</span><strong>banner: </strong>分只适用于首页、不适用首页两种（不适用首页则适用所有其他页面、面包屑模块与该模块一体）</p>
@@ -66,7 +66,7 @@
                 <p></p>
                 <p><span>21</span><strong>页脚：</strong>页面底部信息，可包含返回顶部、移动端底部商务通</p>
             </div>
-            <div class="item-content item-code" v-if="pageType=='d'">
+            <div class="item-content item-code" v-if="tabType=='d'">
                 <p></p>
                 <p>01. 该系统下所有模块共用一套公用初始化样式，公用初始化样式将包括初始化页面样式、以及所有模块通用的样式 <em v-clipboard:copy="publicCssCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制公共样式</em></p>
                 <p>02. 侧边导航固定的框架类型，框架使用本系统提供的统一框架 <em v-clipboard:copy="iframeHtmlCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制框架代码</em><em v-clipboard:copy="iframeCssCode" v-clipboard:success="onCopy" v-clipboard:error="onError">复制框架样式</em></p>
@@ -89,8 +89,9 @@
                 <p>16. 列表中有参数的，必须用p标签，p标签内需设置span，strong标签的样式</p>
                 <p>17. 产品分类列表的当前项类名规定为`active`</p>
                 <p>18. 详情页技术参数模块，pc和移动端参数分别用一个div包裹</p>
+                <p>19. 模块间的间距在没有padding以及背景的情况下，规定默认间距90像素，适配在1440时为70像素，适配在992时为50像素，适配在782时为30像素</p>
             </div>
-            <div class="item-content tags" v-if="pageType=='e'">
+            <div class="item-content tags" v-if="tabType=='e'">
                 <h2>公司名称</h2>
                 <p>程序标签：<span v-clipboard:copy="'$company$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$company$</span></p>
                 <p>使用规则: 所有模块的文字中，凡是表示公司名的，一律使用 $company$ 替代，在站点下载操作时，会弹窗让输入该站点公司名，公司名需先预览该站点，看logo是否包含公司名，如logo包含公司名，则输入的公司名即logo代表的公司名，如不包含，则公司名随意定即可</p>
@@ -132,7 +133,7 @@
                 <p>PC&nbsp;&nbsp;参数：<span v-clipboard:copy="'$detailTechdataPc$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailTechdataPc$</span>，pc和移动技术参数分别用一个div包裹</p>
                 <p>移动参数：<span v-clipboard:copy="'$detailTechdataM$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailTechdataM$</span></p>
             </div>
-            <div class="item-content" v-if="pageType=='f'">
+            <div class="item-content" v-if="tabType=='f'">
                 <h2>添加模块</h2>
                 <p>01. 模块分类属于页头的会分为侧边固定，以及页头显示两种，对应两种页面框架类型</p>
                 <p>02. 侧边导航固定框架类型的只需提交框架内的代码，整个页面大框架代码则由本系统提供一套固定的代码</p>
@@ -155,7 +156,7 @@
                 <h2>删除模块</h2>
                 <p>模块也可以删除，模块列表中有删除操作按钮</p>
             </div>
-            <div class="item-content" v-if="pageType=='g'">
+            <div class="item-content" v-if="tabType=='g'">
                 <p></p>
                 <p>01. 设置每个页面所需要的页面模块以及数据筛选类型、条数，系统会自动匹配所有符合筛选条件，且未被使用、重复度不高的组合数据进行展示，而这每一条数据，都是一个可用的站点</p>
                 <p>02. 站点的有效宽度必须先行设置，固定的 1440 1280 960，一个站点，只会同时存在一种有效宽度的模块，但他们都可以和通屏这个有效宽度进行组合，所以有效宽度的选择最多为两项，最少一项</p>
@@ -166,12 +167,12 @@
                 <p>06. 页面模块的选择有些是可以组合的，有些就是一个整体，如产品详情页：图文详情、正文详情、留言板三个页面模块组合成一个产品详情页，而组合详情自身就还是一个产品详情页，这两者只能二选一</p>
                 <p>07. 在所有筛选条件设置完成后，进行生成站点的操作，此时会展示出所有可用站点组合列表，该列表有三个功能：站点预览、站点信息、站点下载</p> 
             </div>
-            <div class="item-content" v-if="pageType=='h'">
+            <div class="item-content" v-if="tabType=='h'">
                 <p></p>
                 <p>01. 站点预览可以首先看一下该组合出来的站点所有页面组合的效果</p>
                 <p>02. 站点信息将展示站点ID、各个页面的各个页面模块的分类、页面模块的模块分类、模块唯一标识类名、添加人、有效宽度</p>
             </div>
-            <div class="item-content" v-if="pageType=='i'">
+            <div class="item-content" v-if="tabType=='i'">
                 <p></p>
                 <p>01. 站点下载可以将该站点的所有资源的压缩包下载到本地，资源中包括已经生成的各个html页面，css样式文件、该站点所有页面及样式中应用到的静态图片资源、静态JQ库文件以及站点信息文本文件</p>
                 <p>02. 组合站点为系统自动组合匹配，可能会出现模块风格迥异的情况，组合站点并非组合完成就不需要再做修改了，组合后的站点同样需要对细节进行调整</p>
@@ -179,7 +180,7 @@
                 <p>04. 站点下载后，会出现可能该组合某个模块并不理想，需要替换，此时可以在本系统的模块页面中根据设置搜索条件，搜索出需要的模块，模块页面展示的模块除了编辑、删除功能外，会有复制HTML代码以及复制CSS代码的功能，找到需要的模块复制模块的HTML代码和CSS代码替换需要替换的模块即可，而该模块所引用的图片资源，需要通过html和css代码中的引用自行去找到并复制到站点的图片资源文件夹中</p>
                 <p>05. 当站点本地调试完毕后，才能将站点打包发给对应的程序</p>
             </div>
-            <div class="item-content" v-if="pageType=='j'">
+            <div class="item-content" v-if="tabType=='j'">
                 <p></p>
                 <p>01. 已使用站点是已经下载过的站点，这里会做记录</p>
                 <p>02. 已使用站点可以预览、查看站点信息、激活站点</p>
@@ -191,71 +192,72 @@
 </template>
 
 <script>
+import {publicCode}  from '@/utils/index.js';
 export default {
     name: 'defaultPage',
     data: function(){
         return {
-            publicCssCode:'/*=========================================全局共用属性CSS nie ===============================================*/ a, abbr, acronym, address, big, blockquote, body, caption, cite, code, dd, dl, dt, fieldset, form, h1,time, h2, h3, h4, h5, h6, html, img, ins, kbd, label, legend, li, ol, p, pre, q, s, samp, small, span, strike, strong, ul {border:0; outline:0; } body{font-family:Arial,"Open Sans",sans-serif,"Heiti SC","Helvetica","HelveticaNeue","Droidsansfallback","Droid Sans";font-size:16px; line-height:32px; text-align:left; background:#fff;font-style: normal;font-weight:100;color:#5a5b5c; -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale; margin:0; padding:0;} article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section{display:block; } a:link,a:active,a:visited,a:hover {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-tap-highlight-color:transparent; }/*解决在移动端上，事件监听的元素被点击的时候会被高亮显示*/ button{border-radius:0px; -webkit-border-radius:0px; outline:none; } input{border-radius: 0; -webkit-appearance : none; -webkit-border-radius:0px;}/*input在ios上圆角*/ input,select{border-radius:0; outline:none; } input[type="checkbox"]{-webkit-appearance :checkbox;} input:-ms-clear{display:none; }/*消除 IE10 里面的那个叉号*/ input,textarea{border:0; -webkit-appearance:none; } textarea {resize :none; outline:none; }/*去掉提交框右下角箭头*/ img{border:0; vertical-align:middle; MAX-WIDTH:100%!important; HEIGHT:auto!important; _width:expression(this.width > 100% ? "100%" :this.width)!important; } td{padding:8px 5px; } ul,li{list-style:none; } *{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; margin:0; padding:0;} *:after,*:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; margin:0; padding:0;} button{cursor:pointer; } /*这个可以不用*/ h1,h2,h3,h4,h5,h6 {font-weight: 700;font-variant: normal;white-space: normal;} /*全局的字体链接*/ a:link,a:visited{color:#42474e; text-decoration:none; } a:hover,a:active{color:rgb(212, 42, 42); text-decoration:underline; } .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; } .container{clear:both;width:1440px;margin:0 auto;padding: 0px;} .container-1280{clear:both;width:1280px;margin:0 auto;padding: 0px;}/*1280分辨率屏幕*/ .container-960{clear:both;width:960px;margin:0 auto;padding: 0px;}/*960分辨率屏幕*/ @media (max-width: 1600px) { body{line-height:28px;} .container{width:1280px;} } @media (max-width: 1440px) { body{line-height: 26px; font-size:14px;} .container{width:1120px;} } @media (max-width: 1280px) { body{line-height: 24px;} .container{width:960px;} .container-1280{width:960px;} } @media screen and (max-width: 992px){ .container{width:750px;} .container-1280{width:750px;} .container-960{width:750px;} } @media screen and (max-width: 782px){ .container,.container-1280,.container-960{width:100%;} }',
-            iframeHtmlCode:'<div class="aside"></div><div class="main"></div>',
-            iframeCssCode:'.aside{width:240px;position:fixed;left:0;top:0;height:100vh;z-index:999;background:#ccc;}.main{clear:both;margin:0 auto;padding:0px 0px 0px 240px;}@media (max-width:1600px){.aside{position:static;height:auto;width:100%;padding:0;}.main{clear:both;margin:0 auto;padding:0;}}',
-            pageType: "a",
+            publicCssCode:'',
+            iframeHtmlCode:'',
+            iframeCssCode:'',
+            tabType: "a",
             navList:[
                 {
-                    pageType:'a',
+                    tabType:'a',
                     name:'概念',
                     icon:'icon-article',
                     isActive:true,
                 },
                 {
-                    pageType:'b',
+                    tabType:'b',
                     name:'模块属性',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'c',
+                    tabType:'c',
                     name:'模块分类详解',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'d',
+                    tabType:'d',
                     name:'模块编写注意事项',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'e',
+                    tabType:'e',
                     name:'模块程序标签使用',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'f',
+                    tabType:'f',
                     name:'模块的增删改查',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'g',
+                    tabType:'g',
                     name:'组合站点注意事项',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'h',
+                    tabType:'h',
                     name:'生成站点须知',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'i',
+                    tabType:'i',
                     name:'下载站点须知',
                     icon:'icon-article',
                     isActive:false,
                 },
                 {
-                    pageType:'j',
+                    tabType:'j',
                     name:'已使用站点须知',
                     icon:'icon-article',
                     isActive:false,
@@ -263,9 +265,23 @@ export default {
             ]
         }
     },
-    beforeCreate:function(){},
+    beforeCreate:function(){
+        var $this = this;
+    },
+    created:function(){},
+    mounted(){
+        var $this = this;
+        $this.getPublicCode();
+    },
     computed:{},
     methods:{
+        getPublicCode:function(){
+            var $this = this;
+            var publicCodes = publicCode();
+            $this.publicCssCode = publicCodes.publicCssCode;
+            $this.iframeHtmlCode = publicCodes.fixedIframeData.iframeHtmlCode1 + publicCodes.fixedIframeData.iframeHtmlCode2 + publicCodes.fixedIframeData.iframeHtmlCode3;
+            $this.iframeCssCode = publicCodes.fixedIframeData.iframeCssCode;
+        },
         // 代码复制成功提示
         onCopy: function (e) {
             this.$message({
@@ -280,9 +296,9 @@ export default {
         goPage:function(type){
             var $this = this;
             $this.navList.forEach(function(item,index){
-                if(item.pageType == type){
+                if(item.tabType == type){
                     item.isActive = true;
-                    $this.pageType = item.pageType;
+                    $this.tabType = item.tabType;
                 }else{
                     item.isActive = false;
                 }

@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import {publicCode}  from '@/utils/index.js'
 export default {
     name: 'usedWebsitePage',
     data:function(){
@@ -112,7 +113,7 @@ export default {
             pageType:'indexModuleData',
             showCode:'',
             publicData:{
-                publicCssCode:'/*=========================================全局共用属性CSS nie ===============================================*/ a, abbr, acronym, address, big, blockquote, body, caption, cite, code, dd, dl, dt, fieldset, form, h1,time, h2, h3, h4, h5, h6, html, img, ins, kbd, label, legend, li, ol, p, pre, q, s, samp, small, span, strike, strong, ul {border:0; outline:0; } body{font-family:Arial,"Open Sans",sans-serif,"Heiti SC","Helvetica","HelveticaNeue","Droidsansfallback","Droid Sans";font-size:16px; line-height:32px; text-align:left; background:#fff;font-style: normal;font-weight:100;color:#5a5b5c; -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale; margin:0; padding:0;} article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section{display:block; } a:link,a:active,a:visited,a:hover {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-tap-highlight-color:transparent; }/*解决在移动端上，事件监听的元素被点击的时候会被高亮显示*/ button{border-radius:0px; -webkit-border-radius:0px; outline:none; } input{border-radius: 0; -webkit-appearance : none; -webkit-border-radius:0px;}/*input在ios上圆角*/ input,select{border-radius:0; outline:none; } input[type="checkbox"]{-webkit-appearance :checkbox;} input:-ms-clear{display:none; }/*消除 IE10 里面的那个叉号*/ input,textarea{border:0; -webkit-appearance:none; } textarea {resize :none; outline:none; }/*去掉提交框右下角箭头*/ img{border:0; vertical-align:middle; MAX-WIDTH:100%!important; HEIGHT:auto!important; _width:expression(this.width > 100% ? "100%" :this.width)!important; } td{padding:8px 5px; } ul,li{list-style:none; } *{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; margin:0; padding:0;} *:after,*:before{-webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; -webkit-touch-callout:none; margin:0; padding:0;} button{cursor:pointer; } /*这个可以不用*/ h1,h2,h3,h4,h5,h6 {font-weight: 700;font-variant: normal;white-space: normal;} /*全局的字体链接*/ a:link,a:visited{color:#42474e; text-decoration:none; } a:hover,a:active{color:rgb(212, 42, 42); text-decoration:underline; } .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden; font-size:0px; } .container{clear:both;width:1440px;margin:0 auto;padding: 0px;} .container-1280{clear:both;width:1280px;margin:0 auto;padding: 0px;}/*1280分辨率屏幕*/ .container-960{clear:both;width:960px;margin:0 auto;padding: 0px;}/*960分辨率屏幕*/ @media (max-width: 1600px) { body{line-height:28px;} .container{width:1280px;} } @media (max-width: 1440px) { body{line-height: 26px; font-size:14px;} .container{width:1120px;} } @media (max-width: 1280px) { body{line-height: 24px;} .container{width:960px;} .container-1280{width:960px;} } @media screen and (max-width: 992px){ .container{width:750px;} .container-1280{width:750px;} .container-960{width:750px;} } @media screen and (max-width: 782px){ .container,.container-1280,.container-960{width:100%;} }',
+                publicCssCode:'',
                 publicHeaderHtmlCode:'',
                 publicIndexBannerHtmlCode:'',
                 publicOtherBannerHtmlCode:'',
@@ -137,12 +138,7 @@ export default {
                 contactCssCode:'',
                 longTailWordHtmlCode:'',
                 longTailWordCssCode:'',
-                fixedIframeData:{
-                    iframeHtmlCode1:'<div class="aside">',
-                    iframeHtmlCode2:'</div><div class="main">',
-                    iframeHtmlCode3:'</div>',
-                    iframeCssCode:'.aside{width:240px;position:fixed;left:0;top:0;height:100vh;z-index:999;background:#ccc;}.main{clear:both;margin:0 auto;padding:0px 0px 0px 240px;}@media (max-width:1600px){.aside{position:static;height:auto;width:100%;padding:0;}.main{clear:both;margin:0 auto;padding:0;}}',
-                },
+                fixedIframeData:'',
             },
             websiteData:{
                 publicModuleData:[],
@@ -155,7 +151,18 @@ export default {
         var $this = this;
         $this.getWebsiteList();
     },
+    mounted(){
+        var $this = this;
+        $this.getPublicCode();
+    },
     methods:{
+        getPublicCode:function(){
+            var $this = this;
+            var publicCodes = publicCode();
+            $this.publicData.publicCssCode = publicCodes.publicCssCode;
+            $this.publicData.fixedIframeData = publicCodes.fixedIframeData;
+            console.log($this.publicData.fixedIframeData);
+        },
         // 时间格式转化
         formateDate:function(datetime){
           function addZero(num){
