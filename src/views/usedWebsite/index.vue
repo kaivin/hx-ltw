@@ -117,8 +117,18 @@ export default {
                 publicHeaderHtmlCode:'',
                 publicIndexBannerHtmlCode:'',
                 publicOtherBannerHtmlCode:'',
+                publicAboutBannerHtmlCode:'',
+                publicProductBannerHtmlCode:'',
+                publicCaseBannerHtmlCode:'',
+                publicContactBannerHtmlCode:'',
+                publicLtwBannerHtmlCode:'',
                 publicComboHeaderHtmlCode:'',
                 publicOtherComboHeaderHtmlCode:'',
+                publicAboutComboHeaderHtmlCode:'',
+                publicProductComboHeaderHtmlCode:'',
+                publicCaseComboHeaderHtmlCode:'',
+                publicContactComboHeaderHtmlCode:'',
+                publicLtwComboHeaderHtmlCode:'',
                 publicDecorationHtmlCode:'',
                 publicFooterHtmlCode:'',
                 publicModuleCssCode:'',
@@ -249,14 +259,24 @@ export default {
             $this.isPreview = true;
             $this.ID = items.ID;
             $this.showCode = "";
-            $this.publicHeaderHtmlCode='',
-            $this.publicIndexBannerHtmlCode='',
-            $this.publicOtherBannerHtmlCode='',
-            $this.publicComboHeaderHtmlCode='',
-            $this.publicOtherComboHeaderHtmlCode='',
-            $this.publicDecorationHtmlCode='',
-            $this.publicFooterHtmlCode='',
-            $this.publicModuleCssCode='',
+            $this.publicData.publicHeaderHtmlCode='',
+            $this.publicData.publicIndexBannerHtmlCode='',
+            $this.publicData.publicOtherBannerHtmlCode='',
+            $this.publicData.publicAboutBannerHtmlCode='',
+            $this.publicData.publicProductBannerHtmlCode='',
+            $this.publicData.publicCaseBannerHtmlCode='',
+            $this.publicData.publicContactBannerHtmlCode='',
+            $this.publicData.publicLtwBannerHtmlCode='',
+            $this.publicData.publicComboHeaderHtmlCode='',
+            $this.publicData.publicOtherComboHeaderHtmlCode='',
+            $this.publicData.publicAboutComboHeaderHtmlCode='',
+            $this.publicData.publicProductComboHeaderHtmlCode='',
+            $this.publicData.publicCaseComboHeaderHtmlCode='',
+            $this.publicData.publicContactComboHeaderHtmlCode='',
+            $this.publicData.publicLtwComboHeaderHtmlCode='',
+            $this.publicData.publicDecorationHtmlCode='',
+            $this.publicData.publicFooterHtmlCode='',
+            $this.publicData.publicModuleCssCode='',
             $this.publicData.indexHtmlCode = "";
             $this.publicData.indexCssCode = "";
             $this.publicData.aboutHtmlCode = "";
@@ -369,25 +389,21 @@ export default {
                   }
                 });
               }
+              var bannerData = [];
+              var comboHeaderData = [];
               if(serverWebsiteData.publicModuleData.length>0){
                 serverWebsiteData.publicModuleData.forEach(function(item,index){
                     $this.publicData.publicModuleCssCode += item.cssCode;
                     item.name = "";
+                    if(item.moduleType == 'moduleBanner'){
+                      bannerData.push(item);
+                    }
+                    if(item.moduleType == 'moduleComboHeader'){
+                      comboHeaderData.push(item);
+                    }
                     if(item.moduleType == "moduleHeader"){
                         $this.publicData.publicHeaderHtmlCode = item.htmlCode;
                         item.name = "页头";
-                    }else if(item.moduleType == "moduleBanner"&&item.pageType == "index"){
-                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
-                        item.name = "banner";
-                    }else if(item.moduleType == "moduleBanner"&&item.pageType != "index"){
-                        $this.publicData.publicOtherBannerHtmlCode = item.htmlCode;
-                        item.name = "banner";
-                    }else if(item.moduleType == "moduleComboHeader"&&item.pageType == "index"){
-                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
-                        item.name = "组合页头";
-                    }else if(item.moduleType == "moduleComboHeader"&&item.pageType != "index"){
-                        $this.publicData.publicOtherComboHeaderHtmlCode = item.htmlCode;
-                        item.name = "组合页头";
                     }else if(item.moduleType == "moduleDecoration"){
                         $this.publicData.publicDecorationHtmlCode = item.htmlCode;
                         item.name = "装饰模块";
@@ -400,6 +416,72 @@ export default {
                         }
                     }
                 });
+                if(bannerData.length==2){
+                  bannerData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else{
+                        $this.publicData.publicOtherBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }else{
+                  bannerData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "about"){
+                        $this.publicData.publicAboutBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "list"){
+                        $this.publicData.publicProductBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "article"){
+                        $this.publicData.publicCaseBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "contact"){
+                        $this.publicData.publicContactBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "longTailWord"){
+                        $this.publicData.publicLtwBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }
+                if(comboHeaderData.length==2){
+                  comboHeaderData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else{
+                        $this.publicData.publicOtherComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }else{
+                  comboHeaderData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "about"){
+                        $this.publicData.publicAboutComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "list"){
+                        $this.publicData.publicProductComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "article"){
+                        $this.publicData.publicCaseComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "contact"){
+                        $this.publicData.publicContactComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "longTailWord"){
+                        $this.publicData.publicLtwComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }
               }
               if(serverWebsiteData.pageData.length>0){
                 serverWebsiteData.pageData.forEach(function(item,index){
@@ -490,6 +572,7 @@ export default {
               }
               if($this.publicData.publicComboHeaderHtmlCode == ""){
                   if(serverWebsiteData.headerFixed == "0"){
+                    if(bannerData.length==2){
                       $this.publicData.indexHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
                       $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
                       $this.publicData.aboutHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
@@ -506,7 +589,26 @@ export default {
                       $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
                       $this.publicData.longTailWordHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
                       $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                    }else{
+                      $this.publicData.indexHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
+                      $this.publicData.aboutHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicAboutBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.aboutCssCode;
+                      $this.publicData.productListHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productListCssCode;
+                      $this.publicData.productDetailHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productDetailCssCode;
+                      $this.publicData.caseListHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseListCssCode;
+                      $this.publicData.caseDetailHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseDetailCssCode;
+                      $this.publicData.contactHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicContactBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
+                      $this.publicData.longTailWordHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicLtwBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                    }
                   }else{
+                    if(bannerData.length==2){
                       $this.publicData.indexHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
                       $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.indexCssCode;
                       $this.publicData.aboutHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCod + $this.publicData.fixedIframeData.iframeHtmlCode2e + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
@@ -523,8 +625,27 @@ export default {
                       $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.contactCssCode;
                       $this.publicData.longTailWordHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
                       $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.longTailWordCssCode;
+                    }else{
+                      $this.publicData.indexHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.indexCssCode;
+                      $this.publicData.aboutHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCod + $this.publicData.fixedIframeData.iframeHtmlCode2e + $this.publicData.publicAboutBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.aboutCssCode;
+                      $this.publicData.productListHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.productListCssCode;
+                      $this.publicData.productDetailHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.productDetailCssCode;
+                      $this.publicData.caseListHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.caseListCssCode;
+                      $this.publicData.caseDetailHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.caseDetailCssCode;
+                      $this.publicData.contactHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicContactBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.contactCssCode;
+                      $this.publicData.longTailWordHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicLtwBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.longTailWordCssCode;
+                    }
                   }
               }else{
+                if(comboHeaderData.length==2){
                   $this.publicData.indexHtmlCode = $this.publicData.publicComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
                   $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
                   $this.publicData.aboutHtmlCode = $this.publicData.publicOtherComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
@@ -541,6 +662,24 @@ export default {
                   $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
                   $this.publicData.longTailWordHtmlCode = $this.publicData.publicOtherComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
                   $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                }else{
+                  $this.publicData.indexHtmlCode = $this.publicData.publicComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
+                  $this.publicData.aboutHtmlCode = $this.publicData.publicAboutComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.aboutCssCode;
+                  $this.publicData.productListHtmlCode = $this.publicData.publicProductComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productListCssCode;
+                  $this.publicData.productDetailHtmlCode = $this.publicData.publicProductComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productDetailCssCode;
+                  $this.publicData.caseListHtmlCode = $this.publicData.publicCaseComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseListCssCode;
+                  $this.publicData.caseDetailHtmlCode = $this.publicData.publicCaseComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseDetailCssCode;
+                  $this.publicData.contactHtmlCode = $this.publicData.publicContactComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
+                  $this.publicData.longTailWordHtmlCode = $this.publicData.publicLtwComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                } 
               }
               console.log(serverWebsiteData);
               $this.websiteData = serverWebsiteData;

@@ -101,15 +101,9 @@
             </div>
           </div>
           <div class="sub-search" style="width: 270px;float:left;" v-if="searchData.longTailWordData.moduleData[2].isSelected">
-            <h4>热销产品包含模块</h4>
+            <h4>热销生产线包含模块</h4>
             <div class="item-body">
               <el-checkbox v-for="(item,index) in searchData.longTailWordData.moduleData[2].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeHotProductState(item)" border></el-checkbox>
-            </div>
-          </div>
-          <div class="sub-search" style="width: 380px;float:left;" v-if="searchData.longTailWordData.moduleData[4].isSelected">
-            <h4>长尾词列表包含模块</h4>
-            <div class="item-body">
-              <el-checkbox v-for="(item,index) in searchData.longTailWordData.moduleData[4].sonData" v-bind:key="index" v-model="item.isSelected" v-bind:label="item.name" v-on:change="changeProductListState(item)" border></el-checkbox>
             </div>
           </div>
         </div>
@@ -228,6 +222,7 @@
           <contact-message v-if="searchDialog.dialogType=='contactMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></contact-message>
           <module-ltw-img-article v-if="searchDialog.dialogType=='longTailWordImgArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-img-article>
           <module-ltw-main-article v-if="searchDialog.dialogType=='longTailWordMainArticle'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-main-article>
+          <module-ltw-case v-if="searchDialog.dialogType=='longTailWordCase'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-case>
           <module-ltw-product v-if="searchDialog.dialogType=='longTailWordProduct'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-product>
           <module-ltw-message v-if="searchDialog.dialogType=='longTailWordMessage'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-message>
           <module-ltw-about-news v-if="searchDialog.dialogType=='longTailWordHotList'" v-bind:searchData="searchData" v-bind:moduleType="searchDialog.dialogType" v-on:moduleChanged="getModuleChanged($event)"></module-ltw-about-news>
@@ -332,6 +327,7 @@ import moduleContact from '@/components/moduleContact/index.vue';
 import contactMessage from '@/components/contactMessage/index.vue';
 import moduleLtwImgArticle from '@/components/moduleLtwImgArticle/index.vue';
 import moduleLtwMainArticle from '@/components/moduleLtwMainArticle/index.vue';
+import moduleLtwCase from '@/components/moduleLtwCase/index.vue';
 import moduleLtwProduct from '@/components/moduleLtwProduct/index.vue';
 import moduleLtwMessage from '@/components/moduleLtwMessage/index.vue';
 import moduleLtwList from '@/components/moduleLtwList/index.vue';
@@ -375,6 +371,7 @@ export default {
       "module-ltw-img-article":moduleLtwImgArticle,
       "module-ltw-main-article":moduleLtwMainArticle,
       "module-ltw-product":moduleLtwProduct,
+      "module-ltw-case":moduleLtwCase,
       "module-ltw-message":moduleLtwMessage,
       "module-ltw-list":moduleLtwList,
       "module-ltw-about-news":moduleLtwAboutNews,
@@ -396,8 +393,18 @@ export default {
             publicHeaderHtmlCode:'',
             publicIndexBannerHtmlCode:'',
             publicOtherBannerHtmlCode:'',
+            publicAboutBannerHtmlCode:'',
+            publicProductBannerHtmlCode:'',
+            publicCaseBannerHtmlCode:'',
+            publicContactBannerHtmlCode:'',
+            publicLtwBannerHtmlCode:'',
             publicComboHeaderHtmlCode:'',
             publicOtherComboHeaderHtmlCode:'',
+            publicAboutComboHeaderHtmlCode:'',
+            publicProductComboHeaderHtmlCode:'',
+            publicCaseComboHeaderHtmlCode:'',
+            publicContactComboHeaderHtmlCode:'',
+            publicLtwComboHeaderHtmlCode:'',
             publicDecorationHtmlCode:'',
             publicFooterHtmlCode:'',
             publicModuleCssCode:'',
@@ -985,12 +992,27 @@ export default {
                   selectedData:[]
                 }
               },
-              {type:'longTailWordProduct',name:'热销产品',isSelected:true,isDisabled:false,
+              {type:'longTailWordCase',name:'热销生产线',isSelected:true,isDisabled:false,
                 selectedModuleType:['moduleImgList','moduleComboList'],
                 sonData:[
                   {type:'moduleImgList',name:'图文列表',isSelected:true,isDisabled:false},
                   {type:'moduleComboList',name:'组合列表',isSelected:true,isDisabled:false},
                 ],
+                settingData:{
+                  randomQty:"3",
+                  isRandom:"1",
+                  randomData:[
+                      {type:'1',name:"是"},
+                      {type:'0',name:"否"},
+                  ],
+                  listData:[],
+                  moduleGUID:'',
+                  selectedData:[]
+                }
+              },
+              {type:'longTailWordProduct',name:'相关产品',isSelected:true,isDisabled:false,
+                selectedModuleType:['moduleImgList'],
+                sonData:[],
                 settingData:{
                   randomQty:"3",
                   isRandom:"1",
@@ -1019,12 +1041,8 @@ export default {
                 }
               },
               {type:'longTailWordList',name:'长尾词列表',isSelected:true,isDisabled:false,
-                selectedModuleType:['moduleImgList','moduleFontList','moduleComboList'],
-                sonData:[
-                  {type:'moduleImgList',name:'图文列表',isSelected:true,isDisabled:false},
-                  {type:'moduleFontList',name:'文字列表',isSelected:true,isDisabled:false},
-                  {type:'moduleComboList',name:'组合列表',isSelected:true,isDisabled:false},
-                ],
+                selectedModuleType:['moduleComboList'],
+                sonData:[],
                 settingData:{
                   randomQty:"3",
                   isRandom:"1",
@@ -1037,8 +1055,8 @@ export default {
                   selectedData:[]
                 }
               },
-              {type:'longTailWordHotList',name:'相关长尾词',isSelected:true,isDisabled:false,
-                selectedModuleType:['moduleFontList'],
+              {type:'longTailWordHotList',name:'关键词列表',isSelected:false,isDisabled:false,
+                selectedModuleType:[],
                 sonData:[],
                 settingData:{
                   randomQty:"3",
@@ -1096,8 +1114,8 @@ export default {
           companyName:'',
           selectedOol:'',
           oolData:[
-            {type:".NET",name:'.net语言'},
-            {type:"PHP",name:'php语言'}
+            {type:"net",name:'.net语言'},
+            {type:"php",name:'php语言'}
           ],
         }
       }
@@ -1665,13 +1683,13 @@ export default {
       changeLongTailWordModuleState:function(items){
         var $this = this;
         $this.searchData.longTailWordData.moduleData.forEach(function(item,index){
-          if(items.type=="longTailWordImgArticle"||items.type == "longTailWordMainArticle"){
+          if(items.type=="longTailWordImgArticle"||items.type == "longTailWordMainArticle"||items.type=="longTailWordHotList"){
             if(items.isSelected){
               if(item.type == "moduleComboLongTailWord"||item.type == "longTailWordList"){
                 item.isSelected = false;
                 item.selectedModuleType = [];
               }
-              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordProduct"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
                 item.isSelected = true;
                 if(item.type=="longTailWordImgArticle"){
                     item.selectedModuleType =["moduleImgArticle"];
@@ -1679,11 +1697,14 @@ export default {
                 if(item.type=="longTailWordMainArticle"){
                     item.selectedModuleType =["moduleMainArticle"];
                 }
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = ['moduleImgList','moduleComboList'];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = true;
                   });
+                }
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = ['moduleImgList'];
                 }
                 if(item.type=="longTailWordHotList"){
                     item.selectedModuleType =["moduleFontList"];
@@ -1693,7 +1714,7 @@ export default {
                 }
               }
             }else{
-              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"){
+              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordHotList"){
                 item.isSelected = false;
                 item.selectedModuleType = [];
               }
@@ -1701,23 +1722,23 @@ export default {
           }
           if(items.type=="longTailWordList"){
             if(items.isSelected){
-              if(item.type == "moduleComboLongTailWord"||item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"){
+              if(item.type == "moduleComboLongTailWord"||item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordHotList"){
                 item.isSelected = false;
                 item.selectedModuleType = [];
               }
-              if(item.type=="longTailWordProduct"||item.type=="longTailWordList"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type=="longTailWordList"||item.type=="longTailWordMessage"){
                 item.isSelected = true;
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = ['moduleImgList','moduleComboList'];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = true;
                   });
                 }
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = ['moduleImgList'];
+                }
                 if(item.type=="longTailWordList"){
-                  item.selectedModuleType = ['moduleImgList','moduleFontList','moduleComboList'];
-                  $this.searchData.longTailWordData.moduleData[4].sonData.forEach(function(item1,index1){
-                    item1.isSelected = true;
-                  });
+                  item.selectedModuleType = ['moduleComboList'];
                 }
                 if(item.type=="longTailWordHotList"){
                     item.selectedModuleType =["moduleFontList"];
@@ -1733,25 +1754,25 @@ export default {
               }
             }
           }
-          if(items.type=="longTailWordProduct"||items.type=="longTailWordMessage"||items.type=="longTailWordHotList"){
+          if(items.type=="longTailWordCase"||items.type=="longTailWordProduct"||items.type=="longTailWordMessage"){
             if(items.isSelected){
               if(item.type == "moduleComboLongTailWord"){
                 item.isSelected = false;
                 item.selectedModuleType = [];
               }
-              if(item.type=="longTailWordProduct"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type=="longTailWordMessage"){
                 item.isSelected = true;
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = ['moduleImgList','moduleComboList'];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = true;
                   });
                 }
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = ['moduleImgList'];
+                }
                 if(item.type=="longTailWordList"){
-                  item.selectedModuleType = ['moduleImgList','moduleFontList','moduleComboList'];
-                  $this.searchData.longTailWordData.moduleData[4].sonData.forEach(function(item2,index2){
-                    item2.isSelected = true;
-                  });
+                  item.selectedModuleType = ['moduleComboList'];
                 }
                 if(item.type=="longTailWordHotList"){
                     item.selectedModuleType =["moduleFontList"];
@@ -1765,19 +1786,19 @@ export default {
                 item.isSelected = true;
                 item.selectedModuleType = ["moduleComboLongTailWord"];
               }
-              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordProduct"||item.type == "longTailWordList"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type == "longTailWordList"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
                 item.isSelected = false;
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = [];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = false;
                   });
                 }
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = [];
+                }
                 if(item.type=="longTailWordList"){
                   item.selectedModuleType = [];
-                  $this.searchData.longTailWordData.moduleData[4].sonData.forEach(function(item2,index2){
-                    item2.isSelected = false;
-                  });
                 }
                 if(item.type=="longTailWordHotList"||item.type=="longTailWordMessage"||item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"){
                     item.selectedModuleType =[];
@@ -1791,19 +1812,19 @@ export default {
                 item.isSelected = true;
                 item.selectedModuleType = ["moduleComboLongTailWord"];
               }
-              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordProduct"||item.type == "longTailWordList"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type == "longTailWordList"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
                 item.isSelected = false;
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = [];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = false;
                   });
                 }
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = [];
+                }
                 if(item.type=="longTailWordList"){
                   item.selectedModuleType = [];
-                  $this.searchData.longTailWordData.moduleData[4].sonData.forEach(function(item2,index2){
-                    item2.isSelected = false;
-                  });
                 }
                 if(item.type=="longTailWordImgArticle"||item.type == "longTailWordMainArticle"||item.type=="longTailWordHotList"||item.type=="longTailWordMessage"){
                     item.selectedModuleType =[];
@@ -1814,16 +1835,16 @@ export default {
                 item.isSelected = false;
                 item.selectedModuleType = [];
               }
-              if(item.type=="longTailWordProduct"||item.type=="longTailWordMessage"||item.type=="longTailWordHotList"){
+              if(item.type=="longTailWordCase"||item.type=="longTailWordProduct"||item.type=="longTailWordMessage"){
                 item.isSelected = true;
-                if(item.type=="longTailWordProduct"){
+                if(item.type=="longTailWordCase"){
                   item.selectedModuleType = ['moduleImgList','moduleComboList'];
                   $this.searchData.longTailWordData.moduleData[2].sonData.forEach(function(item1,index1){
                     item1.isSelected = true;
                   });
                 }
-                if(item.type=="longTailWordHotList"){
-                    item.selectedModuleType =["moduleFontList"];
+                if(item.type=="longTailWordProduct"){
+                  item.selectedModuleType = ['moduleImgList'];
                 }
                 if(item.type=="longTailWordMessage"){
                   item.selectedModuleType = ["moduleMessage"];
@@ -2147,14 +2168,24 @@ export default {
         $this.isSearch = false;
         $this.ID = items.ID;
         $this.showCode = "";
-        $this.publicHeaderHtmlCode='',
-        $this.publicIndexBannerHtmlCode='',
-        $this.publicOtherBannerHtmlCode='',
-        $this.publicComboHeaderHtmlCode='',
-        $this.publicOtherComboHeaderHtmlCode='',
-        $this.publicDecorationHtmlCode='',
-        $this.publicFooterHtmlCode='',
-        $this.publicModuleCssCode='',
+        $this.publicData.publicHeaderHtmlCode='',
+        $this.publicData.publicIndexBannerHtmlCode='',
+        $this.publicData.publicOtherBannerHtmlCode='',
+        $this.publicData.publicAboutBannerHtmlCode='',
+        $this.publicData.publicProductBannerHtmlCode='',
+        $this.publicData.publicCaseBannerHtmlCode='',
+        $this.publicData.publicContactBannerHtmlCode='',
+        $this.publicData.publicLtwBannerHtmlCode='',
+        $this.publicData.publicComboHeaderHtmlCode='',
+        $this.publicData.publicOtherComboHeaderHtmlCode='',
+        $this.publicData.publicAboutComboHeaderHtmlCode='',
+        $this.publicData.publicProductComboHeaderHtmlCode='',
+        $this.publicData.publicCaseComboHeaderHtmlCode='',
+        $this.publicData.publicContactComboHeaderHtmlCode='',
+        $this.publicData.publicLtwComboHeaderHtmlCode='',
+        $this.publicData.publicDecorationHtmlCode='',
+        $this.publicData.publicFooterHtmlCode='',
+        $this.publicData.publicModuleCssCode='',
         $this.publicData.indexHtmlCode = "";
         $this.publicData.indexCssCode = "";
         $this.publicData.aboutHtmlCode = "";
@@ -2227,6 +2258,7 @@ export default {
           $this.$api.get('/api/Sites/GetCacheDetails?ID='+$this.ID,null,function(res){
             if(res.data.code ==1){
               var serverWebsiteData = res.data.data;
+              console.log(serverWebsiteData);
               serverWebsiteData.headerFont = "";
               if(serverWebsiteData.headerFixed == "0"){
                   serverWebsiteData.headerFont = "否";
@@ -2267,25 +2299,21 @@ export default {
                   }
                 });
               }
+              var bannerData = [];
+              var comboHeaderData = [];
               if(serverWebsiteData.publicModuleData.length>0){
                 serverWebsiteData.publicModuleData.forEach(function(item,index){
                     $this.publicData.publicModuleCssCode += item.cssCode;
                     item.name = "";
+                    if(item.moduleType == 'moduleBanner'){
+                      bannerData.push(item);
+                    }
+                    if(item.moduleType == 'moduleComboHeader'){
+                      comboHeaderData.push(item);
+                    }
                     if(item.moduleType == "moduleHeader"){
                         $this.publicData.publicHeaderHtmlCode = item.htmlCode;
                         item.name = "页头";
-                    }else if(item.moduleType == "moduleBanner"&&item.pageType == "index"){
-                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
-                        item.name = "banner";
-                    }else if(item.moduleType == "moduleBanner"&&item.pageType != "index"){
-                        $this.publicData.publicOtherBannerHtmlCode = item.htmlCode;
-                        item.name = "banner";
-                    }else if(item.moduleType == "moduleComboHeader"&&item.pageType == "index"){
-                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
-                        item.name = "组合页头";
-                    }else if(item.moduleType == "moduleComboHeader"&&item.pageType != "index"){
-                        $this.publicData.publicOtherComboHeaderHtmlCode = item.htmlCode;
-                        item.name = "组合页头";
                     }else if(item.moduleType == "moduleDecoration"){
                         $this.publicData.publicDecorationHtmlCode = item.htmlCode;
                         item.name = "装饰模块";
@@ -2298,6 +2326,72 @@ export default {
                         }
                     }
                 });
+                if(bannerData.length==2){
+                  bannerData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else{
+                        $this.publicData.publicOtherBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }else{
+                  bannerData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicIndexBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "about"){
+                        $this.publicData.publicAboutBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "list"){
+                        $this.publicData.publicProductBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "article"){
+                        $this.publicData.publicCaseBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "contact"){
+                        $this.publicData.publicContactBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "longTailWord"){
+                        $this.publicData.publicLtwBannerHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }
+                if(comboHeaderData.length==2){
+                  comboHeaderData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else{
+                        $this.publicData.publicOtherComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }else{
+                  comboHeaderData.forEach(function(item,index){
+                    if(item.pageType == "index"){
+                        $this.publicData.publicComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "about"){
+                        $this.publicData.publicAboutComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "list"){
+                        $this.publicData.publicProductComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "article"){
+                        $this.publicData.publicCaseComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "contact"){
+                        $this.publicData.publicContactComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }else if(item.pageType == "longTailWord"){
+                        $this.publicData.publicLtwComboHeaderHtmlCode = item.htmlCode;
+                        item.name = "banner";
+                    }
+                  });
+                }
               }
               if(serverWebsiteData.pageData.length>0){
                 serverWebsiteData.pageData.forEach(function(item,index){
@@ -2388,6 +2482,7 @@ export default {
               }
               if($this.publicData.publicComboHeaderHtmlCode == ""){
                   if(serverWebsiteData.headerFixed == "0"){
+                    if(bannerData.length==2){
                       $this.publicData.indexHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
                       $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
                       $this.publicData.aboutHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
@@ -2404,7 +2499,26 @@ export default {
                       $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
                       $this.publicData.longTailWordHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
                       $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                    }else{
+                      $this.publicData.indexHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
+                      $this.publicData.aboutHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicAboutBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.aboutCssCode;
+                      $this.publicData.productListHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productListCssCode;
+                      $this.publicData.productDetailHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productDetailCssCode;
+                      $this.publicData.caseListHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseListCssCode;
+                      $this.publicData.caseDetailHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseDetailCssCode;
+                      $this.publicData.contactHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicContactBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
+                      $this.publicData.longTailWordHtmlCode = $this.publicData.publicHeaderHtmlCode + $this.publicData.publicLtwBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
+                      $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                    }
                   }else{
+                    if(bannerData.length==2){
                       $this.publicData.indexHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
                       $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.indexCssCode;
                       $this.publicData.aboutHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCod + $this.publicData.fixedIframeData.iframeHtmlCode2e + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
@@ -2421,8 +2535,27 @@ export default {
                       $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.contactCssCode;
                       $this.publicData.longTailWordHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicOtherBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
                       $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.longTailWordCssCode;
+                    }else{
+                      $this.publicData.indexHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicIndexBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.indexCssCode;
+                      $this.publicData.aboutHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCod + $this.publicData.fixedIframeData.iframeHtmlCode2e + $this.publicData.publicAboutBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.aboutCssCode;
+                      $this.publicData.productListHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.productListCssCode;
+                      $this.publicData.productDetailHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicProductBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.productDetailCssCode;
+                      $this.publicData.caseListHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.caseListCssCode;
+                      $this.publicData.caseDetailHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicCaseBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.caseDetailCssCode;
+                      $this.publicData.contactHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicContactBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.contactCssCode;
+                      $this.publicData.longTailWordHtmlCode = $this.publicData.fixedIframeData.iframeHtmlCode1 + $this.publicData.publicHeaderHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode2 + $this.publicData.publicLtwBannerHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode + $this.publicData.fixedIframeData.iframeHtmlCode3;
+                      $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.fixedIframeData.iframeCssCode + $this.publicData.longTailWordCssCode;
+                    }
                   }
               }else{
+                if(comboHeaderData.length==2){
                   $this.publicData.indexHtmlCode = $this.publicData.publicComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
                   $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
                   $this.publicData.aboutHtmlCode = $this.publicData.publicOtherComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
@@ -2439,6 +2572,24 @@ export default {
                   $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
                   $this.publicData.longTailWordHtmlCode = $this.publicData.publicOtherComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
                   $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                }else{
+                  $this.publicData.indexHtmlCode = $this.publicData.publicComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.indexHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.indexCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.indexCssCode;
+                  $this.publicData.aboutHtmlCode = $this.publicData.publicAboutComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.aboutHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.aboutCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.aboutCssCode;
+                  $this.publicData.productListHtmlCode = $this.publicData.publicProductComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.productListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productListCssCode;
+                  $this.publicData.productDetailHtmlCode = $this.publicData.publicProductComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.productDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.productDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.productDetailCssCode;
+                  $this.publicData.caseListHtmlCode = $this.publicData.publicCaseComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseListHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.caseListCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseListCssCode;
+                  $this.publicData.caseDetailHtmlCode = $this.publicData.publicCaseComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.caseDetailHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.caseDetailCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.caseDetailCssCode;
+                  $this.publicData.contactHtmlCode = $this.publicData.publicContactComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.contactHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.contactCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.contactCssCode;
+                  $this.publicData.longTailWordHtmlCode = $this.publicData.publicLtwComboHeaderHtmlCode + $this.publicData.publicDecorationHtmlCode + $this.publicData.longTailWordHtmlCode + $this.publicData.publicFooterHtmlCode;
+                  $this.publicData.longTailWordCssCode = $this.publicData.publicCssCode + $this.publicData.publicModuleCssCode + $this.publicData.longTailWordCssCode;
+                } 
               }
               console.log(serverWebsiteData);
               $this.websiteData = serverWebsiteData;
@@ -2487,10 +2638,7 @@ export default {
             });
             return false;
         }
-        window.open("https://www.baidu.com/companyName=" + $this.downloadData.companyName + "&selectedOol=" + $this.downloadData.selectedOol,"_blank");
-        $this.downloadData.isDownload = false;
-        $this.downloadData.companyName = "";
-        $this.downloadData.selectedOol = "";
+        window.open('http://172.16.10.121:8343/api/Sites/DownLoadSite?ID='+$this.ID+'&company=' + $this.downloadData.companyName + '&language=' + $this.downloadData.selectedOol,"_blank");
       }
     }
 }
