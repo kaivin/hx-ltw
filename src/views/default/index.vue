@@ -88,7 +88,7 @@
                 <p></p>
                 <p>16. 列表中有参数的，必须用p标签，p标签内需设置span，strong标签的样式</p>
                 <p>17. 产品分类列表的当前项类名规定为`active`</p>
-                <p>18. 详情页技术参数模块，pc和移动端参数分别用一个div包裹</p>
+                <p>18. 详情页技术参数模块，pc和移动端参数分别用一个div包裹，并分别给一个id，PC的id固定为：pcParam，移动的id固定为：mParam</p>
                 <p>19. 模块间的间距在没有padding以及背景的情况下，规定默认间距90像素，适配在1440时为70像素，适配在992时为50像素，适配在782时为30像素</p>
             </div>
             <div class="item-content tags" v-if="tabType=='e'">
@@ -130,7 +130,7 @@
                 <p>参&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<span v-clipboard:copy="'$detailParam$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailParam$</span></p>
                 <p>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：<span v-clipboard:copy="'$detailDescription$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailDescription$</span></p>
                 <p>正文信息：<span v-clipboard:copy="'$detailContent$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailContent$</span></p>
-                <p>PC&nbsp;&nbsp;参数：<span v-clipboard:copy="'$detailTechdataPc$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailTechdataPc$</span>，pc和移动技术参数分别用一个div包裹</p>
+                <p>PC&nbsp;&nbsp;参数：<span v-clipboard:copy="'$detailTechdataPc$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailTechdataPc$</span>，pc和移动技术参数分别用一个div包裹，并分别给一个id，PC的id固定为：pcParam，移动的id固定为：mParam</p>
                 <p>移动参数：<span v-clipboard:copy="'$detailTechdataM$'" v-clipboard:success="onCopy" v-clipboard:error="onError">$detailTechdataM$</span></p>
             </div>
             <div class="item-content" v-if="tabType=='f'">

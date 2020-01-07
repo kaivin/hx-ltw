@@ -368,7 +368,7 @@ export default {
               items.listType.forEach(function(item,index){
                 $this.formData.listType.forEach(function(item1,index1){
                   if(item == item1.type){
-                    $this.selectedListType.push(item1);
+                    $this.formData.selectedListType.push(item1);
                   }
                 });
               });
@@ -637,7 +637,20 @@ export default {
                         item.isDisabled = true;
                     }
                 });
-            }else if($this.formData.selectedModuleType == "moduleImgArticle"||$this.formData.selectedModuleType == "moduleMainArticle"||$this.formData.selectedModuleType == "moduleComboArticle"){
+            }else if($this.formData.selectedModuleType == "moduleImgArticle"||$this.formData.selectedModuleType == "moduleMainArticle"){
+                $this.isHeader = false;
+                $this.isContactMessage = false;
+                $this.isBanner = false;
+                $this.formData.pageType.forEach(function(item,index){
+                    if(item.type=="article"||item.type=="longTailWord"){
+                        item.isSelected = true;
+                        item.isDisabled = true;
+                    }else{
+                        item.isSelected = false;
+                        item.isDisabled = true;
+                    }
+                });
+            }else if($this.formData.selectedModuleType == "moduleComboArticle"){
                 $this.isHeader = false;
                 $this.isContactMessage = false;
                 $this.isBanner = false;
@@ -872,7 +885,7 @@ export default {
             $this.saveData.listType = [];
             if($this.formData.selectedListType.length>0){
               $this.formData.selectedListType.forEach(function(item,index){
-                $this.saveData.listType.push(item.name);
+                $this.saveData.listType.push(item.type);
               });
             }
             $this.saveData.listType = $this.saveData.listType.length == 0?"":$this.saveData.listType;
