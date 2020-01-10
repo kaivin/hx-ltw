@@ -2318,12 +2318,14 @@ export default {
                         $this.publicData.publicDecorationHtmlCode = item.htmlCode;
                         item.name = "装饰模块";
                     }else{
+                      if(item.moduleType == "moduleFooter"||item.moduleType == "moduleMessage"){
                         $this.publicData.publicFooterHtmlCode += item.htmlCode;
                         if(item.moduleType == "moduleFooter"){
                             item.name = "页脚";
                         }else{
                             item.name = "留言板";
                         }
+                      }
                     }
                 });
                 if(bannerData.length==2){

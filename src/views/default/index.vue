@@ -87,7 +87,7 @@
                 <p>15. 面包屑代码使用ul li写 <code>&lt;li&gt;&lt;a href="url"&gt;二级&lt;/a&gt;&nbsp;&gt;&nbsp;&lt;/li&gt;&lt;li&gt;&lt;span&gt;三级&lt;/span&gt;&lt;/li&gt;</code></p>
                 <p></p>
                 <p>16. 列表中有参数的，必须用p标签，p标签内需设置span，strong标签的样式</p>
-                <p>17. 产品分类列表的当前项类名规定为`active`</p>
+                <p>17. 导航条、产品分类列表的当前项类名规定为`active`（所有有默认当前项的类名，都使用该类名）</p>
                 <p>18. 详情页技术参数模块，pc和移动端参数分别用一个div包裹，并分别给一个id，PC的id固定为：pcParam，移动的id固定为：mParam</p>
                 <p>19. 模块间的间距在没有padding以及背景的情况下，规定默认间距90像素，适配在1440时为70像素，适配在992时为50像素，适配在782时为30像素</p>
             </div>
