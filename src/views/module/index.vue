@@ -281,6 +281,7 @@ export default {
                   {type:'category',name:'分类列表'},
                   {type:'product',name:'产品列表'},
                   {type:'case',name:'案例列表'},
+                  {type:'longTailWordImg',name:'长尾词图文列表'},
                   {type:'longTailWord',name:'长尾词列表'},
                 ],
                 selectedMaxWidth:"",
